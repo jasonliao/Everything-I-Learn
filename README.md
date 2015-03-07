@@ -6,7 +6,7 @@
  *  CSS
  *  JQuery
 
-&emsp;&emsp;But the code below in my js can't work, so I can't select part of my submenu items
+&emsp;&emsp;But the code below in my js can't work, so I can't select part of my submenu items.
 
 
 	submenuItems.each(function() {
@@ -16,3 +16,11 @@
 			menuItems.eq(submenuId).parent().find('.submenu').addClass('active');
 		});
 	});
+	
+##2. Loading
+
+* HTML
+* CSS3
+
+&emsp;&emsp;I hope you'll like it.
+
