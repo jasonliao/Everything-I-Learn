@@ -24,3 +24,9 @@
 
 &emsp;&emsp;I hope you'll like it.
 
+##3. cutSquare
+
+原生js 封装了一个L_cutSquare对象 在html里加入
+	<div id="L_cutSquare"></div>
+并在你的js里new L_cutSquare() 参数是图片的htmlDOMobject
+
