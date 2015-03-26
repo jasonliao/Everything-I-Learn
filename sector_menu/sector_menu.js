@@ -3,7 +3,7 @@ var thisButton,
 	thisSubmenuItem,
 	pieMenu = $('.radialnav'),
 	menuItems = $('.menu > .item > a'),
-	submenu = $('submenu'),
+	submenu = $('.submenu'),
 	submenuItems = $('.submenu > .item > a'),
 	submenuId = 0;
 

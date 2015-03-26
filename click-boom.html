@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>click-boom</title>
+	<style>
+		body {
+		  	user-select: none;
+		  	margin: 0;
+		  	padding: 0;
+		}
+		#body {
+			position: absolute;
+			width: 100%; height: 100%;
+			background: #3abeff;
+			display: block;
+			cursor: pointer;
+			overflow: hidden;
+		}
+		.circle {
+			/*margin: -100px;
+			width: 200px; height: 200px;*/
+			border-radius: 50%;
+			position: absolute;
+			background: #1c3041;
+			-webkit-transform: scale(0);
+			pointer-events: none;
+			-webkit-animation: circle 1s ease;
+		}
+		@-webkit-keyframes circle {
+			0% {
+				opacity: 0.8;
+				-webkit-transform: scale(0);
+			}
+			100% {
+				opacity: 0;
+				-webkit-transform: scale(2);
+			}
+		}
+	</style>
+</head>
+<body>
+	<div id="body"></div>
+	<script>
+		// window.onload = function(){
+
+			var body = document.getElementById('body');
+
+			body.onmousedown = function(e){
+				var x = (e.offsetX == undefined) ? e.layerX : e.offsetX;
+				var y = (e.offsetY == undefined) ? e.layerY : e.offsetY;
+
+				var circle = document.createElement('div');
+				var random = Math.random() * 200;
+				circle.className = 'circle';
+				circle.style.width = random + 'px';
+				circle.style.height = random + 'px';
+				circle.style.margin = -(random/2) + 'px';
+				circle.style.top = y + 'px';
+				circle.style.left = x + 'px';
+				body.appendChild(circle);
+				setTimeout(function(){
+					body.removeChild(circle);
+				}, 1000);
+			};
+		// }
+	</script>
+</body>
+</html>
