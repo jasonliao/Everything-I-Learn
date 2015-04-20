@@ -1,0 +1,50 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+#content {
+    width: 800px;
+    margin: 0 auto;
+}
+
+#room {
+    background: #DDD;
+    margin-bottom: 1em;
+}
+
+#messages {
+    width: 690px;
+    height: 300px;
+    overflow: auto;
+    background: #EEE;
+    margin: 0 10px 1em 0;
+}
+
+#room-list {
+    float: right;
+    width: 100px;
+    height: 300px;
+    overflow: auto;
+}
+
+#room-list div {
+    border-bottom: 1px solid #eee;
+}
+
+#room-list div:hover {
+    background: #ddd;
+}
+
+#send-message {
+    width: 700px;
+    margin: 0 1em 1em 0;
+}
+
+#help {
+    font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
