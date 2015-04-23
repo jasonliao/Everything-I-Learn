@@ -102,10 +102,10 @@ var data = [
 var Main = React.createClass({
     //this.props.playlist
     getInitialState: function() {
-		return {
-			filterTextInput: ''
-		};
-	},
+			return {
+				filterTextInput: ''
+			};
+		},
     handleUserInput: function(filterTextInput) {
         this.setState({
             filterTextInput: filterTextInput
@@ -262,10 +262,10 @@ var Section = React.createClass({
         
 var Container = React.createClass({
     getInitialState: function() {
-		return {
-			playlist: this.props.data[0]
-		};
-	},
+			return {
+				playlist: this.props.data[0]
+			};
+		},
     handleUserClick: function(index) {
         this.setState({
             playlist: this.props.data[index]
