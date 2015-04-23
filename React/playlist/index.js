@@ -39,47 +39,23 @@ var Playlist = React.createClass({
     //this.props.userClick
     //this.props.playlistname
     //this.props.index
-    getInitialState: function() {
-		return {
-			style: {
-                width: 150,
-                height: 20,
-                border: "2px #666 solid",
-                borderRadius: 10,
-                margin: "20px auto",
-                cursor: "pointer",
-
-            }
-		};
-	},
     handleClick: function() {
         this.props.userClick(this.props.index);
-        this.setState({ 
-            style: {
-                width: 150,
-                height: 20,
-                border: "2px #666 solid",
-                borderRadius: 10,
-                margin: "20px auto",
-                cursor: "pointer",
-                background: "#999"
-            }
-        });
     },
     
     render: function() {
         
-//        var styles = {
-//            width: 150,
-//            height: 20,
-//            border: "2px #666 solid",
-//            borderRadius: 10,
-//            margin: "20px auto",
-//            cursor: "pointer",
-//            
-//        }
+        var styles = {
+            width: 150,
+            height: 20,
+            border: "2px #666 solid",
+            borderRadius: 10,
+            margin: "20px auto",
+            cursor: "pointer",
+            
+        }
         return (
-            <div style={this.state.style} onClick={this.handleClick}>
+            <div style={styles} onClick={this.handleClick}>
                 {this.props.playlistname}
             </div>
         );
