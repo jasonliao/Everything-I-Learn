@@ -3,6 +3,7 @@
 2月份开始接触 [React.js](https://facebook.github.io/react/)，主要是为了之后学习 [React Native](https://facebook.github.io/react-native/) 但是现在开源的IOS端只能在OSX下才可以进行开发，然后Android端好像在10月份才开源
 
 首先说一下我觉得学习 `React.js` 时的几个要点
+
 1. 使用了类似`XML`的`JSX`语法来构建组件
 2. `render()`、`getInitialState()`、`setState()`方法
 3. `ref`属性(通过`this.refs.xxx.getDOMNode()`获得组件DOM节点)
