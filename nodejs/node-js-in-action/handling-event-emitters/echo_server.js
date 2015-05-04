@@ -12,7 +12,7 @@ channel.on('join', function(id, client) {
 			this.clients[id].write(message);
 		}
 	};
-	this.clients[id].write('welcome dos chatroom');
+	this.clients[id].write('welcome dos chatroom\n');
 	this.on('broadcast', this.subscriptions[id]);
 	
 });

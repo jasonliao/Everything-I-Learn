@@ -317,5 +317,5 @@ L_cutSquare.prototype = {
             $('L_cutSquare').removeChild($('L_cutSquare').childNodes[0]);
         }
         // this = null;
-    };
+    }
 }

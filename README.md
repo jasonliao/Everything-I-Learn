@@ -1,48 +1,42 @@
-#I'm sharing my code blocks here!
+# I'm sharing my code blocks here!
 
-##1. sector_menu
+## cutSquare
 
- *  HTML
- *  CSS
- *  JQuery
+裁剪图片的裁剪框 导入该js 把div的id设置为L_cutSquare 在css添加 
 
-&emsp;&emsp;But the code below in my js can't work, so I can't select part of my submenu items.
+```CSS	
+#L_cutSquare {
+	position: absolute;
+	display: none;
+	width: 120px;
+	height: 120px;
+	border: 1px black solid;
+}
+```
 
+## loading
 
-	submenuItems.each(function() {
-		thisSubmenuItem = $(this);
-		
-		thisSubmenuItem.hover(function() {
-			menuItems.eq(submenuId).parent().find('.submenu').addClass('active');
-		});
-	});
-	
-##2. Loading
+纯CSS3实现
 
-* HTML
-* CSS3
+## nodejs
 
-&emsp;&emsp;I hope you'll like it.
+学习 Node.js 的代码demo和笔记
 
-##3. cutSquare
+## Reactjs
 
-原生js 封装了一个L_cutSquare对象 在html里加入
+学习 React.js 的一些demo
 
-	<div id="L_cutSquare"></div>
-    
-并在你的js里new L_cutSquare() 参数是图片的htmlDOMobject
-还要在你的css里面加入
+## sector_menu
 
-    #L_cutSquare {
-		position: absolute;
-		display: none;
-		width: 120px;
-		height: 120px;
-		border: 1px black solid;
-	}
+扇形菜单
 
-##4. Captain America
+## Simple-and-effective-dropdown-login-box
 
-Pixel Captain!
+codepen上的一个demo
+
+## tearable-cloth
+
+canvas与JavaScript面向对象的完美结合
+
 
 
