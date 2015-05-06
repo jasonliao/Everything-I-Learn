@@ -5,7 +5,7 @@ var browserSync = require('browser-sync').create();
 var reload = browserSync.reload;
 
 gulp.task('jade', function () {
-	return gulp.src('./src/jade/index.jade')
+	gulp.src('./src/jade/index.jade')
 			.pipe(jade({
 				pretty: true
 			}))
@@ -13,7 +13,7 @@ gulp.task('jade', function () {
 });
 
 gulp.task('sass', function () {
-	return gulp.src('./src/sass/index.scss')
+	gulp.src('./src/sass/index.scss')
 			.pipe(sass())
 			.pipe(gulp.dest('./build/stylesheets'));
 });
