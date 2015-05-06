@@ -12,19 +12,19 @@ gulp.task('jade', function () {
 			.pipe(gulp.dest('./'));
 });
 
-gulp.task('sass', function () {
-	gulp.src('./src/sass/index.scss')
+gulp.task('scss', function () {
+	gulp.src('./src/scss/index.scss')
 			.pipe(sass())
 			.pipe(gulp.dest('./build/stylesheets'));
 });
 
 gulp.task('default', ['serve']);
 
-gulp.task('serve', ['jade', 'sass'], function () {
+gulp.task('serve', ['jade', 'scss'], function () {
 	browserSync.init({
 		server: './'
 	});
-	gulp.watch('./src/sass/index.scss', ['sass']);
+	gulp.watch('./src/scss/index.scss', ['scss']);
 	gulp.watch('./src/jade/index.jade', ['jade']);
 	gulp.watch("./index.html").on('change', reload);
 	gulp.watch("./build/stylesheets/index.css").on('change', reload);
