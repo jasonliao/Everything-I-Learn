@@ -17,7 +17,7 @@ body {
 
 #buttons {
 	margin: 50px auto;
-	width: 350px;
+	width: 310px;
 	height: 40px;
 	text-align: center;
 }
@@ -25,8 +25,8 @@ body {
 .button {
 	border-radius: 20px;
 	float: left;
-	margin-left: 10px;
-	width: 160px;
+	margin-right: 10px;
+	width: 200px;
 	height: 40px;
 	background: $btnCls;
 	font-size: blod;
@@ -36,6 +36,18 @@ body {
 
 .button:hover {
 	background: #51bfa4;
+}
+
+#signup {
+	float: left;
+	color: #ddd;
+	font-size: 90%;
+	margin-top: 20px;
+	cursor: pointer
+}
+
+#signup:hover {
+	color: #FFF;
 }
 
 #loginLayer {
@@ -49,34 +61,34 @@ body {
 	z-index: 999;
 }
 
-#login {
-	width: 400px;
+.popout {
+	width: 360px;
 	height: 270px;
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	margin: -800px 0 0 -200px;
+	margin: -800px 0 0 -180px;
 	z-index: 1000;
 }
 
-#login h2 {
+.popout h2 {
 	text-align: center;
 	margin: 0;
 }
 
-#closeLogin {
+#closeLogin, #closeSignUp {
 	position: relative;
 	top: -28px;
-	left: 380px;
+	left: 325px;
 	cursor: pointer
 }
 
-#closeLogin:hover {
+#closeLogin:hover, #closeSignUp:hover {
 	color: $bgCls
 }
 
 input {
-	width: 390px;
+	width: 340px;
 	height: 40px;
 	margin: 5px 5px;
 	border-radius: 20px;
@@ -91,11 +103,21 @@ input {
 
 input:last-child {
 	color: #FFF;
+	text-indent: 0;
+	border-radius: 22px;
 	background: $btnCls;
+	height: 44px;
 	margin: 30px 5px 0;
 	cursor: pointer;
 }
 
 input:last-child:hover {
 	background: #51bfa4;
+}
+
+#footer {
+	position: absolute;
+	bottom: 12px;
+	width: 180px;
+	right: 12px;
 }
