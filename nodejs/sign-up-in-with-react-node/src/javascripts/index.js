@@ -1,3 +1,4 @@
+// 弹出注册或登录框
 $('#signin').click(function () {
 	$('#loginLayer').css('display','block');
 	$("#login").animate({
@@ -30,4 +31,18 @@ $('#closeSignUp').click(function () {
 		}, 700, 'easeInBack', function () {
 			$('#loginLayer').css('display','none');
 		});
+});
+
+// 注册验证与提交
+$('#signUpUsername').blur(function () {
+	$.ajax({
+		url: '/register',
+		type: 'POET',
+		success: function (data) {
+			console.log(data);
+		},
+		error: function (err) {
+			console.log(err);
+		}
+	});
 });
