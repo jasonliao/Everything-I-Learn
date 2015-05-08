@@ -37,7 +37,11 @@ $('#closeSignUp').click(function () {
 $('#signUpUsername').blur(function () {
 	$.ajax({
 		url: '/register',
-		type: 'POET',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			username: $('#signUpUsername').val()
+		},
 		success: function (data) {
 			console.log(data);
 		},

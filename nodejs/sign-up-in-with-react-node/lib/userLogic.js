@@ -43,6 +43,7 @@ exports.parseReceivedData = function (req, fn) {
 	});
 	req.on('end', function () {
 		var data = qs.parse(body);
+		console.log(data);
 		fn(data);
 	});
 };
