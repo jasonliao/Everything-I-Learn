@@ -7,6 +7,7 @@ var photos = require('./routes/photos');
 var path = require('path');
 var logger = require('morgan');
 var methodOverride = require('method-override');
+var multer = require('multer');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 
@@ -15,10 +16,12 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.set('images', path.join(__dirname, 'images'));
+app.set('images', path.join(__dirname, 'public/images'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
+app.use(multer());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', photos.list);

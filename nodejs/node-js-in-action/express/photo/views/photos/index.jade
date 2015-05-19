@@ -10,5 +10,8 @@ html
 			each photo in photos
 				.photo
 					h1 #{photo.name}
-					img(src="http://#{photo.path}")
+					img(src="/images/#{photo.path}")
+		form(action="/upload")
+			p
+				input(type="submit" value="upload")
 				
