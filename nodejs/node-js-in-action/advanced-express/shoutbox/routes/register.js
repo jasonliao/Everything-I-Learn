@@ -6,7 +6,7 @@ exports.form = function (req, res) {
 	});
 };
 
-exports.submit = function (req, res,next) {
+exports.submit = function (req, res, next) {
 	var username = req.body.username,
 			password = req.body.password;
 	User.find({
@@ -15,7 +15,7 @@ exports.submit = function (req, res,next) {
 		if(err) {
 			return next(err);
 		}
-		if(user.id) {
+		if(user.length != 0) {
 			res.error('Username already taken!');
 			res.redirect('back');
 		} else {
@@ -26,8 +26,7 @@ exports.submit = function (req, res,next) {
 				if(err) {
 					return next(err);
 				}
-				req.session.uid = user.id;
-				req.redirect('/');
+				res.redirect('/login');
 			});
 		}
 	});

@@ -6,3 +6,32 @@ body {
 a {
   color: #00B7FF;
 }
+
+.error {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+#menu {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 12px;
+  color: #888;
+}
+
+#menu .name::after {
+  content: ' -';
+}
+
+#menu a {
+  text-decoration: none;
+  margin-left: 5px;
+  color: #000;
+}
+
+textarea {
+  resize: none;
+  width: 168px;
+  height: 200px
+}

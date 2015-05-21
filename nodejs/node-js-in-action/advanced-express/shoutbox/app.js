@@ -4,11 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var register = require('./routes/register');
+var methodOverride = require('method-override');
+var session = require('express-session');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var register = require('./routes/register');
+var entries = require('./routes/entries');
+var login = require('./routes/login');
 var messages = require('./lib/messages');
+var user = require('./lib/user');
 
 var app = express();
 
@@ -18,20 +21,30 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
+app.use(methodOverride());
+app.use(session({
+  secret: 'shoutbox'
+}));
 app.use(messages);
+app.use(user);
 
-app.use('/', routes);
-app.use('/users', users);
+
+
 app.get('/register', register.form);
 app.post('/register', register.submit);
+app.get('/login', login.form);
+app.post('/login', login.submit);
+app.get('/logout', login.logout);
+app.get('/post', entries.form);
+app.post('/post', entries.submit);
+app.use('/', entries.list);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

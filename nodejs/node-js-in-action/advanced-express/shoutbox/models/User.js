@@ -4,7 +4,6 @@ mongoose.connect('mongodb://localhost/shoutbox_app');
 var schema = new mongoose.Schema({
 	username: String,
 	password: String,
-	age: Number
 });
 
 module.exports = mongoose.model('User', schema);
