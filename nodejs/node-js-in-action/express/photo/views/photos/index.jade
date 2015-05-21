@@ -10,7 +10,8 @@ html
 			each photo in photos
 				.photo
 					h1 #{photo.name}
-					img(src="/images/#{photo.path}")
+					a(href="/photo/#{photo.id}/download")
+						img(src="/images/#{photo.path}")
 		form(action="/upload")
 			p
 				input(type="submit" value="upload")

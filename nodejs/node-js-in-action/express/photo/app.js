@@ -28,6 +28,7 @@ app.get('/', photos.list);
 app.get('/upload', photos.form);
 app.post('/upload', photos.submit(app.get('images')));
 app.get('/users', users);
+app.get('/photo/:id/download', photos.download(app.get('images')));
 
 // error handling middleware should be loaded after the loading the routes
 if ('development' == app.get('env')) {
