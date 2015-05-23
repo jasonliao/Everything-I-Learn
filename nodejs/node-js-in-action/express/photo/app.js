@@ -1,4 +1,3 @@
-var http = require('http');
 var express = require('express');
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -35,7 +34,4 @@ if ('development' == app.get('env')) {
   app.use(errorHandler());
 }
 
-var server = http.createServer(app);
-server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+module.exports = app;
