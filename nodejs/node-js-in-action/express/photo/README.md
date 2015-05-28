@@ -36,10 +36,15 @@ node ./bin/www
 ```
 
 书中的`app.configure`已经被去掉了，可以直接使用`app.set()`
-`express.bodyParser`已经换成了`body-parser`
-`express.cookieSession`已经换成了`cookie-session`
-`express.cookieParser`已经换成了`cookie-parser`
+
+`express.bodyParser` 已经换成了`body-parser`
+
+`express.cookieSession` 已经换成了`cookie-session`
+
+`express.cookieParser` 已经换成了`cookie-parser`
+
 ...
+
 换了好多好多，具体看这里 [Moving to Express 4](http://expressjs.com/guide/migrating-4.html)
 
 网上说，学习node.js要整天看文档，因为更新得很快 [strongloop/expresss](https://github.com/strongloop/express#quick-start)

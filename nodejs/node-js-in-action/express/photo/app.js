@@ -20,7 +20,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
-app.use(multer());
+ //Multer is a node.js middleware for handling multipart/form-data.
+app.use(multer()); 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', photos.list);
