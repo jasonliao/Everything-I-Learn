@@ -38,5 +38,7 @@ codepen上的一个demo
 
 canvas与JavaScript面向对象的完美结合
 
+## Note
 
+I put my markdown note here!
 
