@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>demo</title>
+</head>
+<body>
+  <script>
+    
+    var evens = [1, 2, 3];
+    var map = evens.map(v => v + 1);
+    /*
+       same as
+       var odds = evens.map(function (v) {
+         return v + 1;
+       });
+    */
+    console.log(map);
+
+    //多个参数的传入
+    var reduce = evens.reduce((sum, cur) => sum + cur);
+    console.log(reduce);
+    /*
+       same as
+       var reduce = evens.reduce(function(sum, cur) {
+         return sum + cur;
+       });
+       但如果reduce还有一个参数呢 像这样
+       var reduce = evens.reduce(function(sum, cur) {
+         return sum + cur;
+       }, 10);
+    */
+    var reduce1 = evens.reduce(((sum, cur) => sum + cur), 10);
+    console.log(reduce1);
+
+    //多行代码执行
+    var muti = [];
+    evens.forEach(v => {
+      if (v % 2 == 0) {
+        muti.push(v);
+      }
+    });
+    console.log(muti);
+  </script>
+</body>
+</html>

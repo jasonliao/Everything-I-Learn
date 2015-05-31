@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>somthing about ES2015</title>
+    <link rel="stylesheet" type="text/css" href="build/build.css">
+  </head>
+  <body>
+    <article>
+      <section>
+        <h1>Somthing about ES2015</h1>
+        <h3><a href="https://github.com/L-movingon">Jason Liao</a></h3>
+      </section>
+      <section >
+        <h1>Arrows</h1>
+        <h3>可以用 => 来作为函数的简写，=>前的为函数的参数，如果有多个则用()包含，=>后则为函数的操作</h3>
+        <h3><a href="ArrowsDemo.html">Demo</a></h3>
+      </section>
+      <section>
+        <h1>Class</h1>
+        <h3>class定义的类支持基于原型的继承，父类的调用，实例化，静态方法static，以及构造函数constructor
+      </section>
+      <section>
+        <h2>Template Strings</h2>
+        <ul>
+          <li>
+            <pre><code class="language-javascript">// Verbatim literal string, no backslash escapes
+console.log(`In ES6, '\n' is a line feed`);</code></pre>
+          </li>
+          <li>
+            <pre><code class="language-javascript">// Template strings can be multiline
+console.log(`In ES6, you can have multiline
+ strings`);</code></pre>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h2>Template String Interpolation</h2>
+        <pre><code class="language-javascript">// Interpolate expressions into a template string
+var name = "Bob",
+    time = "today";
+    
+console.log(`Hello ${name}, how are you ${time}?`);
+</code></pre>
+      </section>
+      <section>
+        <h2>Math + Number + String + Object APIs 扩展</h2>  
+      </section>
+      <section>
+        <h3>Including core Math libraries</h3>
+        <pre><code class="language-javascript">
+Math.acosh(3) // 1.762747174039086
+Math.hypot(3, 4) // 5
+Math.imul(Math.pow(2, 32) - 1, Math.pow(2, 32) - 2) // 2</code></pre>
+      </section>
+      <section>
+        <h3><code>Number.isFinite</code>, <code>Number.isNaN</code></h3>
+        <pre><code class="language-javascript">console.log(isFinite("25"));        // true
+console.log(Number.isFinite("25")); // false
+
+console.log(isNaN("LOL"));          // true
+console.log(Number.isNaN("LOL"));   // false
+</code></pre>
+      </section>
+      <section>
+        <h3><code>String.prototype.includes(txt, start)</code></h3>
+        <pre><code class="language-javascript">let title = "JS Futures at ES2015!";
+title.includes("JS")        // true
+title.includes("!")         // true
+title.includes("XYZ")       // false
+title.includes("JS", 3)     // false
+</code></pre>
+      </section>
+      <section>
+        <h3><code>String.prototype.startsWith(txt, start)</code></h3>
+        <pre><code class="language-javascript">let title = "JS Futures at ES2015";
+title.startsWith("JS")      // true
+title.startsWith("js")      // false
+title.startsWith("F")       // false
+title.startsWith("F", 3)    // true
+</code></pre>
+      </section>
+      <section>
+        <h3><code>String.prototype.endsWith(txt, end)</code></h3>
+        <pre><code class="language-javascript">let title = "JS Futures at ES2015!";
+title.endsWith("!")         // true
+title.endsWith("5")         // true
+title.endsWith("!", 3)      // false
+title.endsWith("Fut", 6)    // true
+</code></pre>
+      </section>
+      <section>
+        <h3><code>String.prototype.repeat(count)</code></h3>
+        <pre><code class="language-javascript">console.log("x".repeat(3))      // "xxx"
+console.log("hello".repeat(2))  // "hellohello"
+console.log("abc".repeat(4))    // "abcabcabcabc"
+</code></pre>
+      </section>
+      <section>
+        <h3><code>String.prototype.trim()</code></h3>
+        <pre><code class="language-javascript">console.log(" x  ".trim())      // "x"
+console.log(" \tx".trim())      // "x"
+console.log("foo bar\n".trim()) // "foo bar"
+</code></pre>
+      </section>
+      <section>
+        <h3><code>Array.from(arraylike, mapfun)</code></h3>
+        <pre><code class="language-javascript">let list = document.querySelectorAll('.speaker h2');
+
+console.log(Array.from(list, elem => elem.innerHTML));
+</code></pre>
+      </section>
+      <section>
+        <h2>Let and Const</h2>
+        <pre><code class="language-javascript">function f() {
+  {
+    let x;
+    {
+      const x = "sneaky";
+      x = "foo"; // error, const
+    }
+    let x = "inner"; // error, already declared
+  }
+}</code></pre>
+      </section>
+      <section>
+        <h2>More ES6 Additions...</h2>
+        <ul>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters">default parameters</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters">rest parameters</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">spread operator</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for</code>-<code>of</code> loop</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">iterators</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator">generators</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"><code>Map</code></a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set"><code>Set</code></a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"><code>WeakMap</code></a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet"><code>WeakSet</code></a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy"><code>Proxy</code></a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect"><code>Reflect</code></a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"><code>Promise</code></a></li>
+        </ul>
+      </section>
+      <section>
+        <h1>Thanks</h1>
+        <ul>
+          <li>Reference</li>
+          <li><a href="https://github.com/BrendanEich/ModernWeb.tw-2015">ModernWeb.tw-2015</a></li>
+          <li><a href="https://github.com/lukehoban/es6features">es6features</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web">MDN</a></li>
+        </ul>
+      </section>
+    </article>
+    <script src="build/build.js"></script>
+  </body>
+</html>
