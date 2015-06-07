@@ -1,0 +1,50 @@
+# ES6 in Depth: An Introduction
+
+2015年4月23号 Jason Orendorff
+
+欢迎来到深入了解ES6，在这个新的系列里，我们将会探索即将到来的全新版本的JavaScript - ECMAScript 6，ES6有很多新的语言特性让JavaScript更加强大，也更具有表现力，我们也会在将下来的一个星期里把这些特性都了解一遍。但在我们真正开始之前，我想很有必要说说ES6究竟是什么和你可以期待得到什么。
+
+## What falls under the scope of ECMAScript? (ECMAScript包含了什么)
+
+JavaScript是由ECMA制定标准(ECMA是类似W3C那样的标准组织)并命名为ECMAScript。除此之外，ECMAScript还定义了:
+
+- [语法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar) - 语法的规则，关键字，表述，声明，操作符等等
+- [类型](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures) - 布尔，数字，字符串，对象等等
+- [原型和继承](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+- [内置对象](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects) - [JSON](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON),[Math](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math),[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array),[Object introspection methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object),等等。
+
+没有定义的是与HTML，CSS的操作，还有[Web APIs](https://developer.mozilla.org/en-US/docs/Web/API)，像DOM。那些都会有不同的标准，ECMAScript现在涵盖JavaScript的方面不仅仅停留在浏览器上，在像Node.js这样的非浏览器环境也有涉及。
+
+## The new standard (新的标准)
+
+上一周，ECMAScript的详述最后一稿(即第六版)，已经交给ECMA大会进行审核。这意味着什么?
+
+意味着这个夏天，**我们将会迎来JavaScript语言全新的标准。**
+
+这真是个大消息，JavaScript新标准可不常有。最近的一次，ES5，可以追溯到2009年。ES的标准委员会至今这止也一直致力于ES6。
+
+ES6是一次大的升级，但同时，你的JavaScript代码依旧可以运用。在设计ES6的时候，对现存的代码有极大部分的兼容。事实上，很多浏览器已经开始支持很多ES6的特性，它们也在为实现功能而不断努力中。这意味着你的JavaScript代码已经可以在浏览器中实现一些ES6的特性！如果你现在看不到有不兼容的地方，那你以为也不会看到。
+
+## Counting to 6 (数到6)
+
+之前ECMAScript标准的版本都被命名为1，2，3，5。
+
+版本4发生了什么事？事实上ECMAScript版本4曾被计划完成大量的工作，但最后却因为野心太大而被取消(真的，例如，在静态类型系统与泛型和类型的推断中进行选择)。
+
+ES4是有争议的。当标准委员会最终停止了ES4，委员会成员同意发布相对温和的ES5然后开始发掘更本质的新特性。这个明确，经过协商后的决定被称为“和谐”，这也是为什么ES5的详述里包含了下面两句话：
+
+> ECMAScript是一门充满生气的语言，而这门语言的革命还没有完成。在未来版本详述里你将会看到显著的技术提高。
+
+这个说明更像是一种承诺。
+
+## Promises resolved (实现承诺)
+
+ES5，2009年更新的版本，介绍了`Object.create()`，`Object.defineProperty()`，getter 和 setter, 严格模式，还有JSON对象。我都用过这些特性和我喜欢ES5对这门语言的改变。但这些特性并没有对我写JavaScript代码的方式产生了很大的影响。对于我来说最大的改变大概就是数组的一些新方法例如`map`，`filter`等等。
+
+但是！ES6不一样。这是多年的和谐工作的产物。和这是一个珍贵的新语言和库特性，是JavaScript最本质的升级，没有之一。这些新的特性还包含便捷性，从像arrow functions和简单的字符串操作，到全新的概念像代理和生成器。
+We’ll start with a classic “missing feature” that I’ve been eager to see in JavaScript for the better part of a decade. So join us next week for a look at ES6 iterators and the new for-of loop.
+ES6会改变你写JavaScript代码的方式。
+
+这个系列的目的就是通过对这些新的特性的检查，来展示给同为JavaScript开发者的你看。
+
+我们会以一个我希望在JavaScript中实现很多年的经典特性开始。希望你在下一周加入我们来看一看ES6的迭代器和新的`for-of`循环。
