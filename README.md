@@ -67,8 +67,8 @@ I put my markdown note here!
 |　　+ -- Array.prototype.md
 |　　+ -- _Something ablout ES2015
 |　　|　　+ -- index.html
-|　　+ -- _ES6-in-depth
+|　　+ -- _ES6 in depth
 |　　|　　+ -- An Introduction.md
+|    |    + -- Interators and the for-of loop
 + -- README.md
 ```
-

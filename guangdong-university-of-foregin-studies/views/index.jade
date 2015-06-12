@@ -3,7 +3,7 @@ doctype html
 html
   head
     meta(charset="utf-8")
-    title= title
+    title  摇号程序
     link(rel="stylesheet" href="fullpage.js/jquery.fullpage.css")
     link(rel="stylesheet" href="stylesheet/index.css")
     script(src="jquery/dist/jquery.min.js")
@@ -17,7 +17,7 @@ html
           .layer
             ul
               li  首先随机请6名家长上来随机说出6个101~999之间的一个数字
-              li  然后让前两个数相乘的结果取前三位再与后一个数相乘,如此执行5次后,得到一个三位数A
+              li  然后让前两个数相乘的结果取倒数234位再与后一个数相乘,执行5次后,得到一个三位数A
               li  点击生成按钮,取得系统时间的毫秒数后三位,与数A相乘,结果取前三位,得到一个种子数
               li  以种子数为基准 得到270个在1~800之间的随机数 
         .slide(data-anchor="slide2")
@@ -43,5 +43,5 @@ html
             h1 结果未产生,请按规则操作
           else
             .resultBox
-              each item in result
-                .item= item
+              span#numIndex 0
+              script addAllNumber(#{result});

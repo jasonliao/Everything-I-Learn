@@ -6,6 +6,7 @@ var app = express();
 
 var seed;
 var result;
+
 var getRandomArray = function (seed) {
   var arr = [];
   while (arr.length < 270) {
@@ -21,20 +22,13 @@ var getRandomArray = function (seed) {
       arr.push(randomNumber);
     }
   }
-  return arr.sort(function (val1, val2) {
-    if (val1 < val2) {
-      return -1;
-    } else if (val1 > val2) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+  return arr;
+
 };
 
 app.set('view engine', 'jade');
 
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, '/bower_components')));
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -54,14 +48,13 @@ app.post('/generate', function (req, res) {
   }
   numbers.push(number7);  //获得一个7个三位数的数组
   seed = numbers.reduce(function (pre, cur) {
-    return Number((pre * cur).toString().substring(0,3));
+    return Number((pre * cur).toString().slice(-4, -1));
   });
   res.redirect('/#firstPage/slide3');
 });
 
 app.post('/getResult', function (req, res) {
   result = getRandomArray(seed);
-  console.log(result.length);
   res.redirect('/#firstPage/slide4');
 });
 

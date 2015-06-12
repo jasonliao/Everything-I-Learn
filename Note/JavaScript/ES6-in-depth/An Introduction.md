@@ -42,7 +42,7 @@ ES4是有争议的。当标准委员会最终停止了ES4，委员会成员同�
 ES5，2009年更新的版本，介绍了`Object.create()`，`Object.defineProperty()`，getter 和 setter, 严格模式，还有JSON对象。我都用过这些特性和我喜欢ES5对这门语言的改变。但这些特性并没有对我写JavaScript代码的方式产生了很大的影响。对于我来说最大的改变大概就是数组的一些新方法例如`map`，`filter`等等。
 
 但是！ES6不一样。这是多年的和谐工作的产物。和这是一个珍贵的新语言和库特性，是JavaScript最本质的升级，没有之一。这些新的特性还包含便捷性，从像arrow functions和简单的字符串操作，到全新的概念像代理和生成器。
-We’ll start with a classic “missing feature” that I’ve been eager to see in JavaScript for the better part of a decade. So join us next week for a look at ES6 iterators and the new for-of loop.
+
 ES6会改变你写JavaScript代码的方式。
 
 这个系列的目的就是通过对这些新的特性的检查，来展示给同为JavaScript开发者的你看。
