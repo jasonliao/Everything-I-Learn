@@ -176,7 +176,7 @@ while (!$result.done) {
 
 ## When can I start using this? (什么时候可以用呀)
 
-`for-of`在现在所有Firefox版本中都支持，如果你想让Chrome支持，就要到`chrome://flags`里打开"Experimental JavaScript"。它在微软的Edge也同样得到支持，但在IE中却不可以。如果你想使用这个新的语法，你就要去兼容IE和Safari，你可以使用Babel和Google的Traceur编译器去把你的ES6转成ES5。
+`for-of`在现在所有Firefox版本中都支持，如果你想让Chrome支持，就要到`chrome://flags`里打开"Experimental JavaScript"。它在微软的Edge也同样得到支持，但在IE中却不可以。如果你想使用这个新的语法，你就要去兼容IE和Safari，你可以使用[Babel](http://babeljs.io/)和Google的[Traceur](https://github.com/google/traceur-compiler)编译器去把你的ES6转成ES5。
 
 在服务器端，你不需要编译器，你可以在io.js，node使用`for-of`
 

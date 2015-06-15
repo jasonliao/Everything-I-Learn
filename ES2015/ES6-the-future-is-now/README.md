@@ -140,7 +140,7 @@ benny.say("Underwater Spaceship");
 ### Spread & Rest
 ```javascript
 // The ES5 way
-var args = ['Emmet', 'Baman', Wyldstyle', 'Benny'];
+var args = ['Emmet', 'Baman', 'Wyldstyle', 'Benny'];
 
 function processCharacters () {
   var x = [].slice.call(arguments, 0);
@@ -156,7 +156,7 @@ processCharacters.apply(this, args);
 
 ```javascript
 // The ES6 way
-let args = ['Emmet', 'Baman', Wyldstyle', 'Benny'];
+let args = ['Emmet', 'Baman', 'Wyldstyle', 'Benny'];
 
 function processCharacters (first, ...rest) {
   console.log(first);
@@ -202,7 +202,7 @@ foo({lName: 'Liao'});
 let x = {
   name: 'Will Arnett',
   part: 'Batman'
-}
+};
 let res = `${x.name} voiced ${x.part}.`;
 
 console.log(res);
@@ -267,7 +267,7 @@ createCharacter({
 ```javascript
 let obj = {
   name: 'Emmet',
-  sayHi() {
+  sayHi () {
     return 'Hi there, I'm ' + this.name;
   }
 };
@@ -407,7 +407,7 @@ console.log(
 ```
 
 ### Array.fill
-```javascrip
+```javascript
 let arr = ["Double", "Decker", "Couch"];
 
 arr.fill("Spaceship", 0, arr.length);
@@ -422,7 +422,7 @@ console.log(arr.join(" "));
 ### Array.from
 ```javascript
 // In ES5
-function barman () {
+function batman () {
   return Array.prototype.slice.call(arguments, 0);
 }
 
@@ -442,7 +442,7 @@ console.log(res.join(" "));
 ```
 
 ```javascript
-var res1 = Array.fron("Spaceship");
+var res1 = Array.from("Spaceship");
 console.log(res1);
 // S,p,a,c,e,s,h,i,p
 
@@ -451,7 +451,7 @@ var arr = [
   { part: "Superman", actor: "Channing Tatum" },
   { part: "Metalbeard", actor: "Nick Offerman" }
 ];
-var res2 = Array.from(arr2, (x) => x.actor);
+var res2 = Array.from(arr, (x) => x.actor);
 console.log(res2);
 // [Morgan Freeman, Channing Tatum, Nick Offerman]
 ```

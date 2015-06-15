@@ -72,3 +72,9 @@ I put my markdown note here!
 |    |    + -- Interators and the for-of loop
 + -- README.md
 ```
+
+## ES2015
+
+the things I learn ES2015
+
+- ES6 - The future is now
