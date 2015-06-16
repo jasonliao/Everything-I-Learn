@@ -78,3 +78,4 @@ I put my markdown note here!
 the things I learn ES2015
 
 - ES6 - The future is now
+- Essential ES6 / ES2015
