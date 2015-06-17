@@ -12,6 +12,6 @@ I prefer write my note on .md, some of them were placed on my [blog](http://l-mo
 |　　|　　+ -- index.html
 |　　+ -- _ES6 in depth
 |　　|　　+ -- An Introduction.md
-|    |    + -- Interators and the for-of loop
+|　　|　　+ -- Interators and the for-of loop
 + -- README.md
 ```
