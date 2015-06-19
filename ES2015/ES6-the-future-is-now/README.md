@@ -25,7 +25,7 @@
   - [Array.find](#arrayfind)
   - [Array.fill](#arrayfill)
   - [Array.from](#arrayfrom)
-- [Loops, Generators, Collection & more](#loops-generators-collection-&-more)
+- [Loops Generators Collection & more](#loops-generators-collection-&-more)
   - [Loops Made Better](#loops-made-better)
   - [for-of + generators](#for-of--generators)
   - [Generators](#generators)
@@ -61,7 +61,7 @@ console.log(GOOD_COP); // 'Bad Cop'
 ### Destructuring
 ```javascript
 // matching first two elements
-let [a, b] = ['Emmet', 'Baman', Wyldstyle', 'Benny'];
+let [a, b] = ['Emmet', 'Baman', 'Wyldstyle', 'Benny'];
 console.log(a + '&' + b); // Emmet & Baman
 
 // value swaps made easy!
@@ -69,7 +69,7 @@ console.log(a + '&' + b); // Emmet & Baman
 console.log(a + '&' + b); // Baman & Emmet
 
 // matching first element, and the ...rest parameter
-let [x, ...rest] = ['Emmet', 'Baman', Wyldstyle', 'Benny']
+let [x, ...rest] = ['Emmet', 'Baman', 'Wyldstyle', 'Benny']
 console.log(rest); // ['Baman', Wyldstyle', 'Benny']
 
 var obj = {
@@ -456,7 +456,7 @@ console.log(res2);
 // [Morgan Freeman, Channing Tatum, Nick Offerman]
 ```
 
-## Loops, Generators, Collection & more
+## Loops Generators Collection & more
 
 ### Loops Made Better
 ```javascript

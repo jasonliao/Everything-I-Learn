@@ -1,5 +1,12 @@
 # Triangle JS - ES6
 
+- [Enhanced Object Literals](#enhanced-object-literals)
+- [Block Scoping](#block-scoping)
+- [Arrow Functions](#arrow-functions)
+- [Classes](#classes)
+- [The Iterable Protocol](#the-iterable-protocol)
+- [Proxies](#proxies)
+
 ## Enhanced Object Literals
 ```javascript
 let sayHello = () => { console.log('hello') };

@@ -79,3 +79,4 @@ the things I learn ES2015
 
 - ES6 - The future is now
 - Essential ES6 / ES2015
+- Trangle JS ES6
