@@ -1,5 +1,15 @@
 # ES6 Right Now
 
+- [Promise](#promise)
+- [Set](#set)
+- [Block scope](#block-scope)
+- [Array Comprehensions](#array-comprehensions)
+- [Arrow Functions](#arrow-functions)
+- [Destructuring Assignment](#destructuring-assignment)
+- [Template Strings](#template-strings)
+- [Generators](#generators)
+- [Classes](#classes)
+  
 ## Promise
 ```javascript
 var p = new Promise(function (resolve, reject) {
@@ -120,4 +130,79 @@ let last = 'Liao';
 let fullName = `I'm ${first} ${last}';
 console.log(fullName);
 // I'm Jason Liao
+```
+
+## Generators
+```javascript
+function* infO () {
+  var i = 0;
+  while (true) {
+    yield ++i;
+  }
+}
+
+for (var x of info()) {
+  console.log(x);
+  if (x > 3) {
+    break;
+  }
+}
+// 1, 2, 3, 4
+```
+
+## Classes
+```javascript
+class Greeter {
+  constructor (message) {
+    this.message = message;
+  }
+  greet () {
+    console.log(this.message);
+  }
+}
+
+var greeter = new Greeter('Hey');
+greeter.greet();
+// Hey
+``
+
+## Exports 
+
+- default exports
+```javascript
+// a.js
+var name = 'Jason';
+export default name;
+
+// b.js
+import name form 'a';
+console.log(name);
+```
+
+- named exports
+```javascript
+// a.js
+var name = 'Jason';
+var location = 'ZH';
+
+export name;
+export location;
+
+// b.js
+import { location, name } from 'a';
+console.log(name + ' is in ' + location);
+```
+
+- named exports import namespace
+```javascript
+// a.js
+var name = 'Jason';
+var location = 'ZH';
+
+export name;
+export location;
+
+// b.js
+import * as a from 'a';
+console.log(a.name + ' is in ' + a.location);
 ```
