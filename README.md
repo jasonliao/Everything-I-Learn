@@ -81,4 +81,6 @@ the things I learn ES2015
 - Essential ES6 / ES2015
 - Trangle JS ES6
 - ES6 Right Now
-- javascript Generators
+- JavaScript Generators
+- ES6 - The new JavaScript
+- ES6 - JavaScript grown up
