@@ -42,7 +42,8 @@
 
 ## Reactjs
 
-A simple demo with React
+- A simple React Demo (Playlist)
+- react and webpack
 
 ## sector_menu
 
@@ -78,7 +79,7 @@ I put my markdown note here!
 the things I learn ES2015
 
 - ES6 - The future is now
-- Essential ES6 / ES2015
+- Essential ES6
 - Trangle JS ES6
 - ES6 Right Now
 - JavaScript Generators
