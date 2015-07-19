@@ -44,6 +44,7 @@
 
 - A simple React Demo (Playlist)
 - react and webpack
+- 5 Practical Examples For Learning The React Framework 
 
 ## sector_menu
 

@@ -1,31 +1,27 @@
-var React = require('react');
+import React from 'react';
 
-//export default class Timer extends React.Component {
-export default React.createClass({
-  getInitialState: function () {
-
-    // This is called before our render function. The object that is
-    // returned is assigned to this.state, so we can use it later.
-
-    return {
+export default class Timer extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       elapsed: 0
     };
-  },
-  componentDidMount: function () {
+  }
+  componentDidMount () {
 
     // componentDidMount is called by react when the component
     // has been rendered on the page. We can set the interval here.
 
-    this.timer = setInterval(this.tick, 50);
-  },
-  componentWillUnmount: function () {
+    this.timer = setInterval(this.tick.bind(this), 50);
+  }
+  componentWillUnmount () {
 
     // This method is called immediately before the component is removed
     // form the page and destroyed. We can clear the interval here.
 
     clearInterval(this.timer);
-  },
-  tick: function () {
+  }
+  tick () {
 
     // This function is called every 50 ms. It undates the
     // elapsed counter. Calling setState causes the component to be re-rendered
@@ -33,8 +29,8 @@ export default React.createClass({
     this.setState({
       elapsed: new Date() - this.props.start
     });
-  },
-  render: function () {
+  }
+  render () {
     let elapsed = Math.round(this.state.elapsed / 100);
 
     // This will give a number with one digit after the decimal dot (xx.x)
@@ -44,4 +40,4 @@ export default React.createClass({
     // only the changed parts, which contain the seconds variable
     return <p>This example was started <b>{seconds} seconds</b> ago.</p>;
   }
-});
+}

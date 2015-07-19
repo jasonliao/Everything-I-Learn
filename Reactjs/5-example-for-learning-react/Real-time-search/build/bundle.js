@@ -53,10 +53,19 @@
 
 	'use strict';
 
-	var React = __webpack_require__(2);
-	var Timer = __webpack_require__(158);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	React.render(React.createElement(Timer, { start: Date.now() }), document.body);
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Search = __webpack_require__(158);
+
+	var _Search2 = _interopRequireDefault(_Search);
+
+	var libraries = [{ name: 'Backbone.js', url: 'http://documentcloud.github.io/backbone/' }, { name: 'AngularJS', url: 'https://angularjs.org/' }, { name: 'jQuery', url: 'http://jquery.com/' }, { name: 'Prototype', url: 'http://www.prototypejs.org/' }, { name: 'React', url: 'http://facebook.github.io/react/' }, { name: 'Ember', url: 'http://emberjs.com/' }, { name: 'Knockout.js', url: 'http://knockoutjs.com/' }, { name: 'Dojo', url: 'http://dojotoolkit.org/' }, { name: 'Mootools', url: 'http://mootools.net/' }, { name: 'Underscore', url: 'http://documentcloud.github.io/underscore/' }, { name: 'Lodash', url: 'http://lodash.com/' }, { name: 'Moment', url: 'http://momentjs.com/' }, { name: 'Express', url: 'http://expressjs.com/' }, { name: 'Koa', url: 'http://koajs.com/' }];
+
+	_react2['default'].render(_react2['default'].createElement(_Search2['default'], { items: libraries }), document.body);
 
 /***/ },
 /* 2 */
@@ -18195,46 +18204,87 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	var React = __webpack_require__(2);
 
-	//export default class Timer extends React.Component {
-	exports['default'] = React.createClass({
-	  displayName: 'Timer',
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      elapsed: 0
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var Search = (function (_React$Component) {
+	  _inherits(Search, _React$Component);
+
+	  function Search(props) {
+	    _classCallCheck(this, Search);
+
+	    _get(Object.getPrototypeOf(Search.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      searchString: ''
 	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.timer = setInterval(this.tick, 50);
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    clearInterval(this.timer);
-	  },
-	  tick: function tick() {
-	    this.setState({
-	      elapsed: new Date() - this.props.start
-	    });
-	  },
-	  render: function render() {
-	    var elapsed = Math.round(this.state.elapsed / 100);
-	    var seconds = (elapsed / 10).toFixed(1);
-
-	    return React.createElement(
-	      'p',
-	      null,
-	      'This example was started ',
-	      React.createElement(
-	        'b',
-	        null,
-	        seconds,
-	        ' seconds'
-	      ),
-	      ' ago.'
-	    );
 	  }
-	});
+
+	  _createClass(Search, [{
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+
+	      // If you comment out this line, the text box will not change its value
+	      // This is because in React, an input cannot change independently of the value
+	      // thar was assigned to it. In our case this is this.state.searchString
+
+	      this.setState({
+	        searchString: e.target.value
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var libraries = this.props.items,
+	          searchString = this.state.searchString.trim().toLowerCase();
+
+	      if (searchString.length > 0) {
+	        // we are searching. Fillter the results
+
+	        libraries = libraries.filter(function (l) {
+	          return l.name.toLowerCase().match(searchString);
+	        });
+	      }
+
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        _react2['default'].createElement('input', { value: this.state.searchString, onChange: this.handleChange.bind(this), placeholder: 'Type here' }),
+	        _react2['default'].createElement(
+	          'ul',
+	          null,
+	          libraries.map(function (l) {
+	            return _react2['default'].createElement(
+	              'li',
+	              null,
+	              l.name,
+	              _react2['default'].createElement(
+	                'a',
+	                { href: l.url },
+	                l.url
+	              )
+	            );
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Search;
+	})(_react2['default'].Component);
+
+	exports['default'] = Search;
 	module.exports = exports['default'];
 
 /***/ }
