@@ -6,12 +6,6 @@ export default class Timer extends React.Component {
     this.state = {
       elapsed: 0
     };
-  }
-  componentDidMount () {
-
-    // componentDidMount is called by react when the component
-    // has been rendered on the page. We can set the interval here.
-
     this.timer = setInterval(this.tick.bind(this), 50);
   }
   componentWillUnmount () {

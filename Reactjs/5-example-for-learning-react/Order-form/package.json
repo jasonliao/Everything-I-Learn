@@ -1,7 +1,7 @@
 {
-  "name": "real-time-search",
+  "name": "order-form",
   "version": "1.0.0",
-  "description": "real time search demo",
+  "description": "simple order form demo",
   "main": "index.js",
   "author": "Jason Liao",
   "license": "ISC",

@@ -59,11 +59,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Timer = __webpack_require__(158);
+	var _PictureList = __webpack_require__(158);
 
-	var _Timer2 = _interopRequireDefault(_Timer);
+	var _PictureList2 = _interopRequireDefault(_PictureList);
 
-	_react2['default'].render(_react2['default'].createElement(_Timer2['default'], { start: Date.now() }), document.body);
+	_react2['default'].render(_react2['default'].createElement(_PictureList2['default'], { apikey: '642176ece1e7445e99244cec26f4de1f' }), document.body);
 
 /***/ },
 /* 2 */
@@ -18217,68 +18217,217 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var Timer = (function (_React$Component) {
-	  _inherits(Timer, _React$Component);
+	var _Picture = __webpack_require__(159);
 
-	  function Timer(props) {
-	    _classCallCheck(this, Timer);
+	var _Picture2 = _interopRequireDefault(_Picture);
 
-	    _get(Object.getPrototypeOf(Timer.prototype), 'constructor', this).call(this, props);
+	var PictureList = (function (_React$Component) {
+	  _inherits(PictureList, _React$Component);
+
+	  function PictureList(props) {
+	    _classCallCheck(this, PictureList);
+
+	    _get(Object.getPrototypeOf(PictureList.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      elapsed: 0
+	      pictures: [],
+	      favorites: []
 	    };
-	    this.timer = setInterval(this.tick.bind(this), 50);
 	  }
 
-	  _createClass(Timer, [{
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
+	  _createClass(PictureList, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this = this;
 
-	      // This method is called immediately before the component is removed
-	      // form the page and destroyed. We can clear the interval here.
+	      var url = 'https://api.instagram.com/v1/media/popular?client_id=' + this.props.apikey + '&callback=?';
+	      $.getJSON(url, function (result) {
+	        if (!result || !result.data || !result.data.length) {
+	          return;
+	        }
 
-	      clearInterval(this.timer);
+	        var pictures = result.data.map(function (p) {
+	          return {
+	            id: p.id,
+	            url: p.link,
+	            src: p.images.low_resolution.url,
+	            title: p.caption ? p.caption.text : '',
+	            favorite: false
+	          };
+	        });
+
+	        _this.setState({
+	          pictures: pictures
+	        });
+	      });
 	    }
 	  }, {
-	    key: 'tick',
-	    value: function tick() {
+	    key: 'pictureClick',
+	    value: function pictureClick(id) {
+	      var favorites = this.state.favorites,
+	          pictures = this.state.pictures;
 
-	      // This function is called every 50 ms. It undates the
-	      // elapsed counter. Calling setState causes the component to be re-rendered
+	      for (var i = 0; i < pictures.length; i++) {
+	        if (pictures[i].id == id) {
+	          if (pictures[i].favorite) {
+	            return this.favoriteClick.bind(this)(id);
+	          }
+
+	          favorites.push(pictures[i]);
+	          pictures[i].favorite = true;
+
+	          break;
+	        }
+	      }
 
 	      this.setState({
-	        elapsed: new Date() - this.props.start
+	        pictures: pictures,
+	        favorites: favorites
+	      });
+	    }
+	  }, {
+	    key: 'favoriteClick',
+	    value: function favoriteClick(id) {
+	      var favorites = this.state.favorites,
+	          pictures = this.state.pictures;
+
+	      for (var i = 0; i < favorites.length; i++) {
+	        if (favorites[i].id == id) break;
+	      }
+
+	      favorites.splice(i, 1);
+
+	      for (i = 0; i < pictures.length; i++) {
+	        if (pictures[i].id == id) {
+	          pictures[i].favorite = false;
+	          break;
+	        }
+	      }
+
+	      this.setState({
+	        pictures: pictures,
+	        favorites: favorites
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var elapsed = Math.round(this.state.elapsed / 100);
+	      var _this2 = this;
 
-	      // This will give a number with one digit after the decimal dot (xx.x)
-	      var seconds = (elapsed / 10).toFixed(1);
+	      var pictures = this.state.pictures.map(function (p) {
+	        return _react2['default'].createElement(_Picture2['default'], { id: p.id, src: p.src, title: p.title, favorite: p.favorite, onClick: _this2.pictureClick.bind(_this2) });
+	      });
 
-	      // Although we return an entire <p> element, react will smartly update
-	      // only the changed parts, which contain the seconds variable
-	      return _react2['default'].createElement(
-	        'p',
-	        null,
-	        'This example was started ',
-	        _react2['default'].createElement(
-	          'b',
+	      if (!pictures.length) {
+	        pictures = _react2['default'].createElement(
+	          'p',
 	          null,
-	          seconds,
-	          ' seconds'
+	          'Loading image...'
+	        );
+	      }
+
+	      var favorites = this.state.favorites.map(function (p) {
+	        return _react2['default'].createElement(_Picture2['default'], { id: p.id, src: p.src, title: p.title, favorite: true, onClick: _this2.favoriteClick.bind(_this2) });
+	      });
+
+	      if (!favorites.length) {
+	        favorites = _react2['default'].createElement(
+	          'p',
+	          null,
+	          'Click an image to mark it as a favorite.'
+	        );
+	      }
+
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        _react2['default'].createElement(
+	          'h1',
+	          null,
+	          'Popular Instagram pics'
 	        ),
-	        ' ago.'
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'pictures' },
+	          ' ',
+	          pictures,
+	          ' '
+	        ),
+	        _react2['default'].createElement(
+	          'h1',
+	          null,
+	          'Your favorites'
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'favorites' },
+	          ' ',
+	          favorites,
+	          ' '
+	        )
 	      );
 	    }
 	  }]);
 
-	  return Timer;
+	  return PictureList;
 	})(_react2['default'].Component);
 
-	exports['default'] = Timer;
+	exports['default'] = PictureList;
+	module.exports = exports['default'];
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var Picture = (function (_React$Component) {
+	  _inherits(Picture, _React$Component);
+
+	  function Picture(props) {
+	    _classCallCheck(this, Picture);
+
+	    _get(Object.getPrototypeOf(Picture.prototype), 'constructor', this).call(this, props);
+	  }
+
+	  _createClass(Picture, [{
+	    key: 'clickHandler',
+	    value: function clickHandler() {
+	      this.props.onClick(this.props.id);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var cls = 'picture ' + (this.props.favorite ? 'favorite' : '');
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: cls, onClick: this.clickHandler.bind(this) },
+	        _react2['default'].createElement('img', { src: this.props.src, width: '200', title: this.props.title })
+	      );
+	    }
+	  }]);
+
+	  return Picture;
+	})(_react2['default'].Component);
+
+	exports['default'] = Picture;
 	module.exports = exports['default'];
 
 /***/ }

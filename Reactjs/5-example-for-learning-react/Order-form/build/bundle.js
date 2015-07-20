@@ -59,11 +59,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Timer = __webpack_require__(158);
+	var _ServiceChooser = __webpack_require__(158);
 
-	var _Timer2 = _interopRequireDefault(_Timer);
+	var _ServiceChooser2 = _interopRequireDefault(_ServiceChooser);
 
-	_react2['default'].render(_react2['default'].createElement(_Timer2['default'], { start: Date.now() }), document.body);
+	var services = [{ name: 'Web Development', price: 300 }, { name: 'Design', price: 400 }, { name: 'Integration', price: 250 }, { name: 'Training', price: 220 }];
+
+	_react2['default'].render(_react2['default'].createElement(_ServiceChooser2['default'], { items: services }), document.body);
 
 /***/ },
 /* 2 */
@@ -18217,68 +18219,138 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var Timer = (function (_React$Component) {
-	  _inherits(Timer, _React$Component);
+	var _Service = __webpack_require__(159);
 
-	  function Timer(props) {
-	    _classCallCheck(this, Timer);
+	var _Service2 = _interopRequireDefault(_Service);
 
-	    _get(Object.getPrototypeOf(Timer.prototype), 'constructor', this).call(this, props);
+	var ServiceChooser = (function (_React$Component) {
+	  _inherits(ServiceChooser, _React$Component);
+
+	  function ServiceChooser(props) {
+	    _classCallCheck(this, ServiceChooser);
+
+	    _get(Object.getPrototypeOf(ServiceChooser.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      elapsed: 0
+	      total: 0
 	    };
-	    this.timer = setInterval(this.tick.bind(this), 50);
 	  }
 
-	  _createClass(Timer, [{
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-
-	      // This method is called immediately before the component is removed
-	      // form the page and destroyed. We can clear the interval here.
-
-	      clearInterval(this.timer);
-	    }
-	  }, {
-	    key: 'tick',
-	    value: function tick() {
-
-	      // This function is called every 50 ms. It undates the
-	      // elapsed counter. Calling setState causes the component to be re-rendered
-
+	  _createClass(ServiceChooser, [{
+	    key: 'addTotal',
+	    value: function addTotal(price) {
 	      this.setState({
-	        elapsed: new Date() - this.props.start
+	        total: this.state.total + price
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var elapsed = Math.round(this.state.elapsed / 100);
+	      var _this = this;
 
-	      // This will give a number with one digit after the decimal dot (xx.x)
-	      var seconds = (elapsed / 10).toFixed(1);
-
-	      // Although we return an entire <p> element, react will smartly update
-	      // only the changed parts, which contain the seconds variable
+	      var services = this.props.items.map(function (s) {
+	        return _react2['default'].createElement(_Service2['default'], { name: s.name, price: s.price, active: s.active, addTotal: _this.addTotal.bind(_this) });
+	      });
 	      return _react2['default'].createElement(
-	        'p',
+	        'div',
 	        null,
-	        'This example was started ',
 	        _react2['default'].createElement(
-	          'b',
+	          'h1',
 	          null,
-	          seconds,
-	          ' seconds'
+	          'Our service'
 	        ),
-	        ' ago.'
+	        _react2['default'].createElement(
+	          'div',
+	          { id: 'services' },
+	          services,
+	          _react2['default'].createElement(
+	            'p',
+	            { id: 'total' },
+	            'Total ',
+	            _react2['default'].createElement(
+	              'b',
+	              null,
+	              '$',
+	              this.state.total.toFixed(2)
+	            )
+	          )
+	        )
 	      );
 	    }
 	  }]);
 
-	  return Timer;
+	  return ServiceChooser;
 	})(_react2['default'].Component);
 
-	exports['default'] = Timer;
+	exports['default'] = ServiceChooser;
+	module.exports = exports['default'];
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var Service = (function (_React$Component) {
+	  _inherits(Service, _React$Component);
+
+	  function Service(props) {
+	    _classCallCheck(this, Service);
+
+	    _get(Object.getPrototypeOf(Service.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      active: false
+	    };
+	  }
+
+	  _createClass(Service, [{
+	    key: 'clickHandler',
+	    value: function clickHandler() {
+	      var active = !this.state.active;
+	      this.setState({
+	        active: active
+	      });
+	      this.props.addTotal(active ? this.props.price : -this.props.price);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'p',
+	        { className: this.state.active ? 'active' : '', onClick: this.clickHandler.bind(this) },
+	        this.props.name,
+	        ' ',
+	        _react2['default'].createElement(
+	          'b',
+	          null,
+	          '$',
+	          this.props.price.toFixed(2)
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Service;
+	})(_react2['default'].Component);
+
+	exports['default'] = Service;
 	module.exports = exports['default'];
 
 /***/ }
