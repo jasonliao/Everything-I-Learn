@@ -39,6 +39,7 @@
 	- static-file-sever
 	- todo
 	- work-tracking-app-with-mysql
+- **learnyounode** (some note when I play [learnyounode](http://nodeschool.io/#workshoppers))
 
 ## Reactjs
 
