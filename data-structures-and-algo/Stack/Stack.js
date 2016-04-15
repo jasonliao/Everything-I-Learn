@@ -17,7 +17,7 @@ Stack.prototype = {
     return !this.top;
   },
   clear () {
-    while (!isEmpty()) {
+    while (!this.isEmpty()) {
       this.pop();
     }
   },
@@ -28,7 +28,7 @@ Stack.prototype = {
     this.storage[this.top++] = elm;
   },
   pop () {
-    if (!isEmpty()) {
+    if (!this.isEmpty()) {
       deleteData = this.storage[--this.top];
       delete this.storage[this.top];
       return deleteData;
