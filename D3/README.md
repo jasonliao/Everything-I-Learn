@@ -62,9 +62,11 @@ var bars = canvas.selectAll('rect')
 - `data()` 传入要处理的数据
 - `enter()` 返回与数据相对应的点位符
 
-可能有些人很困惑，一开始 `canvas` 里都没有 `rect`，为什么就可以 `selectAll('rect')` 呢？的确，这里是有点奇怪。而我的理解是，我们要先告诉 D3 我们用什么标签去处理我们的数据和我们有多少数据，然后我们用 `enter()` 去返回占位符，每个占位符都会执行 `append()` 和 `attr` 等下面的操作，`d` 就是每个数据的值，`i` 就是数据的下标，类似 `map()` 一样
+可能有些人很困惑，一开始 `canvas` 里都没有 `rect`，为什么就可以 `selectAll('rect')` 呢？的确，这里是有点奇怪。但其实这里关键的是 `enter()` 函数，它会根据数据的个数返回占位符，每个占位符都会执行 `append()` 和 `attr` 等下面的操作，`d` 就是每个数据的值，`i` 就是数据的下标，类似 `map()` 一样
 
-好吧，其实我也不能说服自己。那就记住就好。但不管怎么说，我们的确做出了一个很丑的柱状图 :)
+而当我们想更新数据的时候，这些 `rect` 就已经存在了，所以 `selectAll('rect')` 并不一定是空的。下面讲到 `enter()`，`update()` 和 `exit()` 的区别的时候，你就会明白了
+
+但不管怎么说，我们的确做出了一个很丑的柱状图 :)
 
 ## Scale Our Data
 
@@ -99,3 +101,150 @@ var widthScale = d3.scale.linear()
 ```
 
 当然啦，我们棒棒的宽度，高度，甚至填充色都可以 Scale，快来试试吧
+
+## Add Group and Axis
+
+SVG 里提供了一个 `<g>` 标签给我们分组，现在要为柱状图添加轴了，所以为了区别轴和棒棒本身，我们分别用不同的 `<g>` 包住它们，首先，在 `canvas` 变量后面加多一行
+
+```javascript
+.append('g');
+```
+
+然后现在就定义轴，定义轴非常简单，因为 D3 都帮我们封装好了
+
+```javascript
+var axis = d3.svg.axis()
+             .scale(widthScale);
+```
+
+这样就定义好了，然后我们就在 `canvas` 里把它加进去
+
+```javascript
+canvas.append('g')
+      .call(axis);
+```
+
+但是这个轴应该在底部才对呀，没关系，因为已经分组了，所以可以对组进行样式和位置的调整
+
+```javascript
+canvas.append('g')
+      .attr('transform', 'translate(3, 300)')
+      .call(axis);
+```
+
+这个柱状图真是越来越像样啦
+
+## Enter & Update & Exit
+
+刚刚前面提到的绑定数据的时候，我们使用了一个 `enter()` 的方法，返回的是数据的占位符。这种情况是指一开始我们的 DOM 元素小于 Dataset 元素的时候，但除此之外，我们还有两种情况，一种就是当我们的 DOM 元素大于 Dataset 元素的时候，另一种就是 DOM 元素等于 Dataset 元素的时候
+
+这样我们就会涉及另外一个函数 `exit()`
+
+怎么理解 `enter()` 和 `exit()` 呢，首先，先把你的代码都清空，我们要开始认真了
+
+重新定义一个 `canvas` 和 `dataset`
+
+```javascript
+var dataset = [10];
+
+var canvas = d3.select('body')
+               .append('svg')
+               .attr('width', 500)
+               .attr('height', 500);
+```
+
+根据之前的学习，我们知道，如果 `canvas` 里没有我们选择的元素，就要使用 `enter()` 来返回占位符，再去每个占位符进行操作
+
+```javascript
+var circle = canvas.selectAll('circle')
+                   .data(dataset)
+                   .enter()
+                   .append('circle')
+                   .attr('cx', 25)
+                   .attr('cy', 25)
+                   .attr('r', 25)
+                   .attr('fill', 'green');
+```
+
+这时就可以看到我们设置的一个绿色的圆，但是如果本来，就有一个圆的存在呢，我们在 `circle` 变量之前，首先手动插入一个红色的圆 `circle1  `，而且为了区别，我把它的位置调到了最底下
+
+```javascript
+var circle1 = canvas.append('circle')
+                    .attr('cx', 25)
+                    .attr('cy', 475)
+                    .attr('r', 25)
+                    .attr('fill', 'red');
+```
+
+这时候你再看页面，你的绿波波已经不见了，那是因为当你 `selectAll('circle')` 的时候，返回的是 1，`data(dataset)` 的时候与数据匹配发现数据也是 1，那么 `enter()` 的时候，就没有多余的占位符返回了，所以后面的代码都不起作用
+
+现在就是 DOM 元素和数据元素相等的情况，那我是不是就没有办法对已经存在的 DOM 元素进行修改了呢，当然可以！在 `enter()` 之前，我们可以对所有选中的 DOM 元素进行更新(不严谨，下文说)
+
+```javascript
+var circle = canvas.selectAll('circle')
+                   .data(dataset)
+                   .attr('cy', 250) // 对已经存在的元素进行更新
+                   .enter()
+                   .append('circle')
+                   .attr('cx', 25)
+                   .attr('cy', 25)
+                   .attr('r', 25)
+                   .attr('fill', 'green');
+```
+
+看，你把红色波波放到垂直居中的地方去了，继续一路小跑，修改 `dataset` 
+
+```javascript
+var dataset = [10, 20];
+```
+
+又看到我们的绿色波波了是吗？现在我想你已经明白 `enter()` 的作用了
+
+**`enter()` 的作用在于，把 `selectAll()` 选择到的 DOM 元素和 `data()` 里规定的数据个数进行比较，返回 (数据个数 - DOM 元素) 个占位符，并对每个占位符执行 `enter()` 之后的代码，而原来选择到的 DOM 元素要么保持原来的定义样式，要么可以在 `enter()` 前对它们进行更新**
+
+我们讨论了数据个数大于等于 DOM 元素的情况，那小于呢？
+
+```javascript
+var dataset = [10];
+
+var circle1 = canvas.append('circle')
+                    .attr('cx', 25)
+                    .attr('cy', 475)
+                    .attr('r', 25)
+                    .attr('fill', 'red');
+
+var circle2 = canvas.append('circle')
+                    .attr('cx', 25)
+                    .attr('cy', 25)
+                    .attr('r', 25)
+                    .attr('fill', 'red');
+
+var circle = canvas.selectAll('circle')
+                   .data(dataset)
+```
+
+先把我们的代码变成这样，就可以到两个红波波一个在顶一个在底，我们可以发现，现在的情况是 DOM 元素多于数据个数的，那么现在我加多一行代码在 `circle` 里，猜猜会是什么效果
+
+```javascript
+var circle = canvas.selectAll('circle')
+                   .data(dataset)
+                   .attr('fill', 'green');
+```
+
+为什么只有一个绿球！
+
+这也就是刚刚我说不严谨的地方，它并不是选择所有的 DOM 元素进行更新，事实上，它更新的 DOM 元素的个数，等于 DOM 元素和数据个数中的较小值。也就是说，当 DOM 元素小于数据个数(刚刚讨论的情况)，那么更新的就是所有 DOM 元素；当 DOM 元素大于数据个数(现在讨论的情况)，那么更新的就是前数据个数个 DOM 元素
+
+那么剩下的元素怎么处理呢，对啦，多余的数据由 `enter()` 处理，多余的 DOM 元素就由 `exit()` 处理
+
+```javascript
+var circle = canvas.selectAll('circle')
+                   .data(dataset)
+                   .attr('fill', 'green')
+                   .exit()
+                   .attr('fill', 'blue');
+```
+
+最后用一张图来概括一下吧
+
+![enter&exit](http://ww4.sinaimg.cn/large/7988751agw1f2yhis0q7vj21kw16tk4x.jpg)
