@@ -260,6 +260,299 @@ esac
 
 ## Loops
 
+### While Loops
+
+```bash
+while [ <some test> ]
+do
+  <commands>
+done
+```
+
+example below we will print the numbers 1 through to 10
+
+```bash
+#!/bin/bash
+
+counter=1
+while [ $counter -le 10]
+do
+  echo $counter
+  (( counter++ ))
+done
+
+echo All done
+```
+
+`-le` is mean less than or equal
+
+### Until Loops
+
+```bash
+until [ <some test>]
+do
+  <commands>
+done
+```
+
+```bash
+#!/bin/bash
+
+counter=1
+until [ $counter -gt 10]
+do
+  echo $counter
+  (( counter++ ))
+done
+
+echo All done
+```
+
+### For Loops
+
+```bash
+for var in <list>
+do
+  <commands>
+done
+```
+
+```bash
+#!/bin/bash
+
+names='Jason Liao'
+
+for name in $names
+do
+  echo name
+done
+
+# Jason
+# Liao
+```
+
+Ranges
+
+```bash
+#!/bin/bash
+
+for value in {1..5}
+do
+  echo $value
+done
+
+# 1
+# 2
+# 3
+# 4
+# 5
+```
+
+```bash
+#!/bin/bash
+
+for value in { 1..5 }
+do
+  echo $value
+done
+
+# {
+# 1..5
+# }
+```
+
+```bash
+#!/bin/bash
+
+for value in {10..0..2}
+do
+  echo $value
+done
+
+# 10
+# 8
+# 6
+# 4
+# 2
+# 0
+```
+
+processing of a set of files, for example, rename
+
+```bash
+#!/bin/bash
+
+for value in $1/*.html
+do
+  mv $value $1/$( basename $value .html ).php
+done
+```
+
+### Select 
+
+```bash
+select var in <lisr>
+do
+  <commands>
+done
+```
+
+```bash
+#!/bin/bash
+
+names='start pause stop'
+
+PS3='Select character: '
+
+select name in $names
+do
+  case $name in
+    start)
+      echo starting
+      ;;
+    pause)
+      echo pausing
+      ;;
+    stop)
+      echo stoping
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+```
+
+## Function
+
+```bash
+function_name () {
+  <commands>
+}
+```
+
+```bash
+function function_name {
+  <commands>
+}
+```
+
+### Passing Arguments
+
+```bash
+#!/bin/bash
+
+print_something () {
+  echo Hello $1
+}
+
+print_something Mars
+
+# Hello Mars
+```
+
+### Return Values
+
+```bash
+#!/bin/bash
+
+print_something () {
+  echo Hello $1
+  return 5
+}
+
+print_something Mars
+echo The previous function has a return value of $?
+
+# Hello Mars
+# The previous function has a return value of 5
+```
+
+```bash
+#!/bin/bash
+
+lines_in_file () {
+  cat $1 || wc -l
+}
+
+num_lines=$( lines_in_file $1 )
+echo The file $1 has $num_lines lines in it.
+```
+
+### Variable Scope
+
+```bash
+local var_name=<var_value>
+```
+
+```bash
+@!/bin/bash
+
+var_change () {
+  local var1='local 1'
+  echo Inside function: var1 is $var1, var2 is $var2
+  var1='1 change again'
+  var2='2 change again'
+}
+
+var1='global 1'
+var2='global 2'
+
+echo Before function call: var1 is $var1, var2 is $var2
+
+var_change
+
+echo After function call: var1 is $var1, var2 is $var2
+
+# Before function call: var1 is global 1, var2 is global 2
+# Inside function: var1 is local 1, var2 is global 2
+# After function call: var1 is global 1, var2 is 2 change again
+```
+
+### Overriding Commands
+
+```bash
+#!/bin/bash
+
+ls () {
+  command ls -lh
+}
+
+ls
+```
+
+If we didn't put the keyword **command** in front of `ls` we would end up in an endless loop
+
+## User Interface
+
+### TPut
+
+further research
+
+```bash
+#!/bin/bash
+
+cols=$( tput cols )
+rows=$( tput lines )
+
+message=$@
+
+input_length=${#message}
+
+half_input_length=$(( $input_length / 2 ))
+
+middle_row=$(( $rows / 2 ))
+middle_col=$(( ( $cols / 2 ) - $half_input_length ))
+
+tput clear
+
+tput cup $middle_row $middle_col
+tput bold
+echo $@
+tput sgr0
+tput cup $( tput lines ) 0
+```
+
 ## Resources
 
 - [Bash Scripting Tutorial](http://ryanstutorials.net/bash-scripting-tutorial)
