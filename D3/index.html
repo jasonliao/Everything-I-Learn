@@ -10,30 +10,36 @@
 <body>
   <script>
 
-    var dataset = [10];
+    var data = [{
+      x: 0, y: 0
+    }, {
+      x: 0, y: 100
+    }, {
+      x: 100, y: 100
+    }, {
+      x: 100, y: 0
+    }, {
+      x: -5, y: 0
+    }];
 
-    var canvas = d3.select('body')
-                   .append('svg')
-                   .attr('width', 500)
-                   .attr('height', 500);
+    var canvas = d3.select('body').append('svg')
+                   .attr('width', 500).attr('height', 500);
+    
 
-    var circle1 = canvas.append('circle')
-                        .attr('cx', 25)
-                        .attr('cy', 475)
-                        .attr('r', 25)
-                        .attr('fill', 'red');
+    var group = canvas.append('g')
+                      .attr('transform', 'translate(100, 100)');
 
-    var circle2 = canvas.append('circle')
-                        .attr('cx', 25)
-                        .attr('cy', 25)
-                        .attr('r', 25)
-                        .attr('fill', 'red');
+    var line = d3.svg.line()
+                 .x(function (d) { return d.x })
+                 .y(function (d) { return d.y });
 
-    var circle = canvas.selectAll('circle')
-                       .data(dataset)
-                       .attr('fill', 'green')
-                       .exit()
-                       .attr('fill', 'blue')
+    group.selectAll('path')
+         .data([data]).enter()
+         .append('path')
+         .attr('d', line)
+         .attr('fill', 'none')
+         .attr('stroke', '#000')
+         .attr('stroke-width', 10);
 
   </script>
 </body>
