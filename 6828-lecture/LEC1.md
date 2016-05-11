@@ -77,3 +77,88 @@ Read More
 - [What does wait(NULL) do on Unix?](http://stackoverflow.com/questions/13216554/what-does-wait-do-on-unix)
 - [The wait() System Call](http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/wait.html)
 
+### What are pipes?
+
+`|` 就是一个管道，把上一个命令的输出当成下一个命令的输入，最后把输出返回给最开始的 Bash 进程，输出给用户看
+
+Unix 的 Bash 会根据多少个命令来创建多少个进程，例如 `ls | sort` 就会从 Bash 中开两个进程来分别执行 `ls` 和 `sort`
+
+现在我们来实现一下 pipe
+
+```c
+#include<unistd.h>
+
+int main (int argc, char **argv)
+{
+  int i;
+
+  for (i = 1; i < argc - 1; i++) {
+    int pd[2];
+    pipe(pd);
+
+    if (!fork()) { // child process
+      close(pd[0]);
+      dup2(pd[1], 1); 
+      execlp(argv[i], argv[i], NULL);
+    }
+
+    close(pd[1]);
+    dup2(pd[0], 0);
+  }
+
+  execlp(argv[i], argv[i], NULL);
+  return 0;
+}
+```
+
+Read More
+
+- [Unix Pipes](http://web.cse.ohio-state.edu/~mamrak/CIS762/pipes_lab_notes.html)
+- [man pipe](http://linux.die.net/man/2/pipe)
+- [man fork](http://linux.die.net/man/2/fork)
+- [man close](http://linux.die.net/man/2/close)
+- [man dup2](http://linux.die.net/man/2/dup2)
+- [man execlp](http://linux.die.net/man/3/execlp)
+
+### Homework
+
+下载的 `sh.c` 大部分的代码已经帮我们写好了，我们只需要对 `runcmd()` 里的 `case` 实现一下就可以了
+
+- `execcmd`
+
+  执行命令的实现非常简单，直接调用 C 语言的库函数，第一个是命令的文件，第二个是命令的参数
+
+  ```c
+  execvp(ecmd->argv[0], ecmd->argv);
+  ```
+
+- `redircmd`
+
+  重定向命令，实现的思想是打开一个文件资源，然后把它的内容当成前一个命令的标准输入或者输出流
+
+  ```c
+  pid_t fd = open(rcmd->file, rcmd->mode, S_IRWXU);
+  dup2(fd, rcmd->fd);
+  close(fd);
+  ```
+
+  因为一开始在 `parsecmd()` 的时候，已经把 `>` 和 `<` 是作为标准输入还是输出(0 还是 1)存在了 `rcmd->fd` 里，所以在这里不再需要区分，还有 `S_IRWXU` 是定义这个文件的权限的，现在是定义为 00700
+
+- `pipecmd`
+
+  管道命令之前已经实现过了，主要通过 `fork()` 开启一个子进程，然后通过 `pipe()` 这个系统调用使两个进程进行沟通
+
+  ```c
+  int pd[2];
+  pipe(pd);
+
+  if (!fork()) {
+    close(pd[0]);
+    dup2(pd[1], 1);
+    runcmd(pcmd->left);
+  } else {
+    close(pd[1]);
+    dup2(pd[0], 0);
+    runcmd(pcmd->right);
+  }
+  ```

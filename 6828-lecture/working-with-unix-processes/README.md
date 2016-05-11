@@ -1,6 +1,6 @@
 # Working with Unix Processes
 
-看《理解 Unix 进程》的笔记
+看《Working with Unix Processes》的笔记
 
 ## Overview
 
@@ -35,9 +35,21 @@ $ man find # same as man 1 find
 
 例如你打开一个终端，那么终端就是一个进程，然后你在终端里运行 Bash，那么 Bash 就是终端的子进程，然后你运行 `ls`，那么 `ls` 这个进程的父进程就是 Bash
 
-Terminal Process -> Bash Process -> `ls` Process
+例如我们的终端里输入
 
-如果想获取父进程的 `pid`，就可以使用 `getppid()`
+```bash
+$ ps -f
+```
+
+你可以看到 `ps -f` 的 PID 和 PPID，而 PPID 就是上一个进程的 PID，也就是 zsh 或者 bash。那 bash 的 PPID 那个数字是什么呢？我们可以这样看看
+
+```bash
+$ ps -f 10440 # 10440 就是 bash 的那个 PPID
+```
+
+你看到应该是你的终端了，例如我的 gnome-terminal
+
+在系统调用中，如果想获取父进程的 `pid`，就可以使用 `getppid()`
 
 ## Processes Hava File Descriptors
 
@@ -65,3 +77,94 @@ $ man 2 setrlimit
 ```
 
 ## Processes Have an Environment
+
+这里说的环境是是环境变量，每个线程都会从父进程继承环境变量，环境变量可以从父进程中设置
+
+环境变量有很多作用，例如可以使用它们来使我们的工作流程更方便。也就是说，可以用不同的环境就是来代表不同的开发环境，例如在 Node 中
+
+```bash
+$ NODE_ENV=dev node app.js
+```
+
+然后在 `app.js` 里进行判断
+
+```javascript
+if (process.env.NODE_ENV === 'dev') {
+  // some code
+}
+```
+
+没有系统调用可以修改环境变量，但是 C 语言库可以
+
+```bash
+$ man 3 setenv
+$ man 3 getenv
+```
+
+## Processes Have Arguments
+
+在我们执行命令的时候可以为进程传入一些参数，这样我们的程序就可以使用用户的一些输入。例如我们执行一个 Shell 程序
+
+```bash
+$ ./someshell.sh ~/file1 ~/file2
+```
+
+那么就可以使用 `$1`，`$2` 来获取 `~/file1` 和 `~/file2`
+
+或者如果使用的是 node
+
+```bash
+$ node somejs.js ~/file1 ~/file2
+```
+
+那就可以使用 `process.argv[2]` 和 `process.argv[3]`
+
+## Processes Have Names 
+
+进程之间的通信在进程层级只有两个方法，一个是通过进程名，而另一个是进程的退出码
+
+## Processes Have Exit Code
+
+进程退出的时候，会有一个退出码，标志着是成功的退出是错误地退出。一般来说，如果退出码是 0 那么就是成功，否则则为失败。不同的数字也代表不同的错误，你可以根据线程的错误码来进行不同的处理
+
+而退出进程的方法也有几种，例如
+
+- `exit`
+
+  ```bash
+  exit # 成功退出，和 exit 0 一样
+
+  exit 22 # 自定义退出码
+  ```
+
+  `atexit()` 会先执行
+
+- `exit!`
+
+  ```bash
+  exit! # 强制退出，退出码默认为 1
+
+  exit! 33 # 当然你也可能自定义
+  ```
+
+  `atexit()` 不会执行
+
+- `abort`
+
+  ```bash
+  abort # 也是另一种不成功退出的方法，退出码默认也是 1
+
+  abort "Somethind went wrong" # 可以传入信息，让 STRERR 输出
+  ```
+
+  `atexit()` 会在 STDERR 输出完后执行
+
+- `raise`
+
+  `raise` 不会让进程立刻退出，它会抛出一个异常，如果没有代码处理它，就会退出进程
+
+  ```bash
+  raise "exception!" # 和 `abort` 一样
+  ```
+
+[man atexit](http://linux.die.net/man/3/atexit)
