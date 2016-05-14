@@ -167,4 +167,106 @@ $ node somejs.js ~/file1 ~/file2
   raise "exception!" # 和 `abort` 一样
   ```
 
-[man atexit](http://linux.die.net/man/3/atexit)
+Read More
+
+- [man atexit](http://linux.die.net/man/3/atexit)
+
+## Processes Can Fork
+
+进程可以通过 `fork()` 来创建一个子进程，从 `fork()` 这条命令开始，原来的程序就会被复制一份，放到一个子进程里同时进行接下来的代码，可以通过 `fork()` 的返回值来判断该进程是父进程还是子进程，在父进程中，`fork()` 返回的是一个大于 0 的整数，这个数就是子进程的 pid，而在子进程中，`fork()` 就会返回 0。所以一般会看到这样的代码
+
+```c
+pid_t fork(void); // pid_t defined in sys/types.h
+pid_t pid;
+
+switch (pid = fork()) {
+  case -1:
+    perror("The fork failed!");
+    break;
+  case 0:
+    // child process do something
+    exit(0);
+    break;
+  default:
+    // parent process get in here
+    printf("Child's pid is %d\n", pid);
+}
+```
+
+Read More
+
+- [What does fork() do?](http://www.unixguide.net/unix/programming/1.1.1.shtml)
+- [The fork() System Call](http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/create.html)
+- [man fork](http://linux.die.net/man/2/fork)
+
+## Orphaned Processes
+
+一般我们通过终端输入一条命令的时候，就会有一个进程在运行，把我们键盘的输入当成标准的输入，把进程执行完的东西当成标准的输出。当按 Ctrl-C 的时候，就让该进程退出
+
+但当进程通过 `fork()` 创建了子进程之后，当你按 Ctrl-C 的时候是退出哪个进程呢，子进程？父进程？还是两个都退出？答案是父进程。这时子进程就会变成孤儿进程，但是孤儿进程不会因为父进程被杀掉而被杀掉，而是继续运行下去
+
+怎么管理孤儿进程后面会说，现在先来了解两个概念
+
+1. 守护进程 - 守护进程就是长时间运行在后台的进程，它们为了可以长时间运行就把自己故意变成孤儿进程
+2. Unix 信号 - 可以通过 Unix 信号来与一些和终端会话无关的进程进行通信
+
+## Processes Are Friendly
+
+前面说到的，当用 `fork()` 创建一个子进程的时候，子进程就会把父进程在内存中的所有东西都复制过来使用。但是完全的复制全部数据会带来很大的开销，所以 Unix 采用了一种叫 copy-on-write(CoW)
+的方式，顾名思义，就是在子进程中真正要写数据的时候，才把这个数据复制一份。也就是说，父进程和子进程会共用内存中的一份数据直到其中一方需要修改它，也就是在这个时候，两个进程就会适当地分离，使用各自关于这一个数据的内存，而其他数据内存则继续共享
+
+## Processes Can Wait
+
+`fork()` 创建了一个子进程之后，父进程和子进程就会同时运行接下面的代码，这对于一些子进程需要处理异步代码，而父进程则继续往下执行代码的情况非常有好处，但更多的时候我们是想当子进程处理完代码之后，父进程再执行他要处理的代码。这时就要用到 [`wait()`](http://linux.die.net/man/2/wait)
+
+`wait()`，`waitpid()`，`waitid()` 这三个方法都是用于等待程序的子进程状态发生变化的系统调用，进程状态发生变化包括: 子进程终止(`exit(0)`)，子进程被信号停止，子进程被信号恢复
+
+这些调用执行时会使该进程休眠，直到它的其中一个子进程状态发生改变，`wait(&status)` 相当于 `waitpid(-1, &status, 0)`，返回值则为状态改变的进程的 pid
+
+这就是为什么当我们 `fork()` 一个子进程出来之后，在子进程执行完操作之后，一般都要 `exit(0)`，因为这样父进程才知道子进程什么时候终止，好继续执行其他操作
+
+`while (wait(NULL) > 0)` 则是表示要所有的子进程状态都发生改变
+
+Read More
+
+- [What does wait(NULL) do on Unix?](http://stackoverflow.com/questions/13216554/what-does-wait-do-on-unix)
+- [The wait() System Call](http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/wait.html)
+
+## Zombie Processes
+
+当子进程已经死了，但是它的父进程还在进行着其他操作，没有对这个进程的退出状态进行处理回收，那么这个进程就是僵尸进程，或者另一种情况，就是子进程需要长时间的运行，而父进程不可能等到它结束再进行下面的代码，所以这时父进程也在执行其他任务，完全不理子进程的时候，那么这个子进程也会成为僵尸进程
+
+因为内核会把已经退出的子进程的状态保留起来，直到父进程使用 `wait()` 来使用它。如果父进程不使用 `wait()` 来使用它，它就会一直存在，占用资源
+
+如果你不打算使用 `wait()` 来处理子进程，那么就可以通过 [double fork](http://thinkiii.blogspot.jp/2009/12/double-fork-to-avoid-zombie-process.html) 来避免僵尸进程
+
+```c
+void double-fork()
+{
+  pid_t pid1, pid2;
+  int status;
+
+  if (pid1 = fork()) { // parent process
+    waitpid(pid1, &status, NULL);
+    // complete other tasks
+  } else { 
+    if (pid2 = fork()) { // child process
+      exit(0);
+    } else { // grandchild process
+      // do the work which the parect process wants
+      // its child process to do
+    }
+  }
+}
+```
+
+当第一次 `fork()` 执行的时候，子进程只是简单的执行第二次 `fork()` 和 `exit()`，这样的话父进程就不需要长时间去等待子进程结束了(因为子进程只执行 `fork()` 和 `exit()`)，因为父进程使用了 `waitpid()` 去处理子进程，所以子进程不会成为僵尸进程
+
+这时候父进程就可以去完成其他工作了，然后结束。而对于孙子进程，因为它的父进程已经死了，所以孙子进程会被 `init` 进程收养，而 `init` 进程会对它的每个子进程都进行回收处理。那么父进程就不需要等待太久，才去执行自己的任务，也没有僵尸进程产生
+
+Read More
+
+- [double fork to avoid zombie process](http://thinkiii.blogspot.jp/2009/12/double-fork-to-avoid-zombie-process.html)
+- [why fork() twice](http://stackoverflow.com/questions/10932592/why-fork-twice)
+
+## Processes Can Get Signals

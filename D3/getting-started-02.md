@@ -56,3 +56,106 @@ var line = d3.svg.line()
 ```
 
 这样的意思就是，把我们数据里的所有点，都用直线连上，并返回一个 path 的值
+
+## Arcs
+
+之前我们一直在玩直的东西，那现在就来玩玩圆的东西，我们来创建一个圆弧。同样的，D3 已经把我们做好了圆弧的生成器，我们只需要填入我们的配置就可以了
+
+```javascript
+var canvas = d3.select('body')
+               .append('svg')
+               .attr('width', 500)
+               .attr('height', 500);
+
+var group = canvas.append('g').attr('transform', 'translate(100, 100)');
+
+var arc = d3.svg.arc()
+            .innerRadius(80);
+            .outerRadius(100);
+            .startAngle(0);
+            .endAngle(2 * Math.PI);
+
+group.append('path').attr('d', arc);
+```
+
+所有的东西都很简单，除了定义 `arc` 时的那几个函数。`innerRadius()` 就是里面圈的半径，`outerRadius()` 就是外面圈的半径。它们相差多少就是圆弧的宽度了。`startAngle()` 就是圆弧开始的地方，而 `endAngle()` 自然就是圆弧结束的地方，但这里的参数并不是度数，而是圆弧的长。
+
+怎么理解呢，就像刚刚那么例子，开始地方为 0，也就是说从 12 点的方向开始，结束的时候为 `Math.PI * 2`，我们都知道圆的周长为 `2 * PI * r`，所以我们这里只需要填入 `Math.PI * 2`，那么 D3 就会根据
+`innerRadius()` 和 `outerRadius()` 来算出圆弧长，所以你想弄一个半弧，我想你已经知道怎么做了
+
+```javascript
+endAngle(Math.PI);
+```
+
+## The Pie Layout
+
+根据上一部份的内容来做一个 Pie Chart，加入数据，加入样式等等，首先还是一样，准备好画板，当然啦，还有数据
+
+```javascript
+var data = [10, 50, 80];
+
+var canvas = d3.select('body')
+               .append('svg')
+               .attr('width', 500)
+               .attr('height', 500);
+
+var group = canvas.append('g').attr('transform', 'translate(100, 100)');
+```
+
+像上一节的，我们创建一个圆弧生成器
+
+```javascript
+var arc = d3.svg.arc()
+            .innerRadius(50)
+            .outterRadius(100);
+```
+
+为什么这时候不加上之前的起始位置和终止位置呢，因为我们有了数据，所以每个数据都要自定义开始和结束。现在介绍一个新的东西，叫 `pie` layout
+
+`pie` layout 做的就是通过我们的数据，然后返回每一个数据元素的对象，让我们去重新计算或者设置它的开始和结束位置或者设置一些其他的属性等等，那现在就来试一下吧
+
+```javascript
+var pie = d3.layout.pie()
+            .value(function (d) { return d; });
+```
+
+在更进一步之前，来看看 `pie(data)` 会返回什么，返回了一个对象数组，里面每一个对象的 `data` 属性就是我们原来数组里的数值，还有 `startAngle` 和 `endAngle`，那现在每个对象都创建一个 `group`，来组成我们的圆弧
+
+```javascript
+var arcs = group.selectAll('.arc')
+                .data(pie(data))
+                .enter()
+                .append('g')
+                .attr('class', 'arc');
+```
+
+然后就为每一个 `group` 创建一个 `path`，`path` 的 `d` 属性就是 `arc` 这个圆弧生成器
+
+```javascript
+arcs.append('path')
+    .attr('d', arc);
+```
+
+这时你应该看到一个黑色的完整圆弧了，但是怎么用颜色区别开来呢？很简单，先定义一个颜色数组
+
+```javascript
+var color = ['#abcdef', '#F44336', '#F8C444'];
+```
+
+然后再为每个 `path` 填充色
+
+```javascript
+arcs.append('path')
+    .attr('d', arc)
+    .attr('fill', function (d, i) { return color[i]; });
+```
+
+哇，是不是好漂亮，如果标上数值就完成了，快来 `append` 一个 `text` 吧
+
+```javascript
+arcs.append('text')
+    .attr('transform', function (d) { return 'translate(' + arc.centroid(d) + ')'; })
+    .text(function (d) { return d.data; });
+```
+
+`arc.centroid()` 这个函数就是找到第一个 `path` 的居中的位置

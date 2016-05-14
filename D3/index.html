@@ -10,36 +10,37 @@
 <body>
   <script>
 
-    var data = [{
-      x: 0, y: 0
-    }, {
-      x: 0, y: 100
-    }, {
-      x: 100, y: 100
-    }, {
-      x: 100, y: 0
-    }, {
-      x: -5, y: 0
-    }];
+    var data = [10, 50 ,80];
 
-    var canvas = d3.select('body').append('svg')
-                   .attr('width', 500).attr('height', 500);
-    
+    var color = ['#abcdef', '#F44336', '#F8C444'];
 
-    var group = canvas.append('g')
-                      .attr('transform', 'translate(100, 100)');
+    var canvas = d3.select('body')
+                   .append('svg')
+                   .attr('width', 500)
+                   .attr('height', 500);
 
-    var line = d3.svg.line()
-                 .x(function (d) { return d.x })
-                 .y(function (d) { return d.y });
+    var group = canvas.append('g').attr('transform', 'translate(300, 300)');
 
-    group.selectAll('path')
-         .data([data]).enter()
-         .append('path')
-         .attr('d', line)
-         .attr('fill', 'none')
-         .attr('stroke', '#000')
-         .attr('stroke-width', 10);
+    var arc = d3.svg.arc()
+                .innerRadius(50)
+                .outerRadius(100);
+
+    var pie = d3.layout.pie()
+                .value(function (d) { return d; });
+
+    var arcs = group.selectAll('.arc')
+                    .data(pie(data))
+                    .enter()
+                    .append('g')
+                    .attr('class', 'arc');
+
+    arcs.append('path')
+        .attr('d', arc)
+        .attr('fill', function (d, i) { return color[i]; })
+
+    arcs.append('text')
+        .attr('transform', function (d) { return 'translate(' + arc.centroid(d) + ')'; })
+        .text(function (d) { return d.data; });
 
   </script>
 </body>
