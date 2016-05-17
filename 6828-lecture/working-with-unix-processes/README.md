@@ -270,3 +270,138 @@ Read More
 - [why fork() twice](http://stackoverflow.com/questions/10932592/why-fork-twice)
 
 ## Processes Can Get Signals
+
+进程可以通过信号来和系统中的其他进程进行通信，在此之前我们只知道 `pid`。这就让信号成为非常有用的通信工具。例如我们常常使用 `kill` 来发送一个信号。
+
+实际上信号常常被用于服务进程和守护进程这一些长时间运行的进程中。而另外大多数的情况就是用户给进程发送信号
+
+Read More
+
+- [man sigaction](http://linux.die.net/man/2/sigaction)
+- [man signal](http://linux.die.net/man/7/signal)
+
+## Processes Can Communicate
+
+相关进程之间不仅仅可以共享内存和打开的资源，还可以进行信息的交流。进行 IPC(Inter-Porcess Communication) 一般有两种方式
+
+1. pipes(管道)
+
+  管道可以让数据在里面单向流动，而数据可以来自于不同的进程，所以 pipes 可以用于 IPC，例如可以使用 `pipe()` 来实现 `|` 这个命令
+
+  ```c
+  int pd[2];
+  pipe(pd);
+
+  if (!fork()) {
+    close(pd[0]);
+    dup2(pd[1], 1);
+    runcmd(pcmd->left);
+  } else {
+    close(pd[1]);
+    dup2(pd[0], 0);
+    runcmd(pcmd->right);
+  }
+  ```
+
+2. socket pairs(socket 匹配)
+
+  刚刚说到的 pipes 只是单向的数据流，如果你想进程之间的通信是双向的，那么就应该使用 socket pairs。
+
+  Read More
+
+  - [man socketpair](http://linux.die.net/man/2/socketpair)
+  - [man send](http://linux.die.net/man/2/send)
+  - [man recv](http://linux.die.net/man/2/recv)
+
+## Daemon Processes
+
+守护进程是那些运行在后台的进程，例如一些网络服务器，数据库服务器等等。还有一些是为了保证系统可以正常工作的，例如一些音频和打印服务等等。
+
+当内核被编译装在电脑上后，就会有一个叫 `init` 的守护进程，这个进程的 `ppid` 为 0，因为它是第一个进程，所以它的 `pid` 就为 1。所有的进程都可以成为守护进程，现在就来看看怎么把创建一个守护进程
+
+1. **fork** 一个子进程并让父进程退出，这样子进程就运行在后台了
+2. **setsid** 创建一个新的会话，子进程就会成为这个新会话和新的进程组的头，这时子进程已经和终端进程没有关系了
+  - 进程组指的是所有相关进程的一个集合，一般就是父进程和子进程。进程组的 `id` 一般会与进程组的头进程的 `pid` 相同。
+  - 会话组指的是进程组的集合，如果你是在终端输入命令，那么会话组就会绑定在终端上
+3. **catch signals** 处理信号
+4. **fork again** 让原来的子进程终止，确保成为会话的头进程
+5. **chdir** 改变守护进程的工作目录
+6. **umask** 改变守护进程的权限
+7. **close** 关闭所有从父进程继承来的文件资源
+
+当使用 `ps -xj | grep <daemon process name>` 的时候，`TTY` 应该为 `?` 表示没有可以控制该进程的终端。`PPID` 应该为 `1` 是因为守护进程的父进程应该为 `init` 进程。`PID != SID` 表示这个进程不是会话组的头进程，确保不会再被终端控制
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <syslog.h>
+
+static void skeleton_daemon()
+{
+    pid_t pid;
+
+    /* Fork off the parent process */
+    pid = fork();
+
+    /* An error occurred */
+    if (pid < 0)
+        exit(EXIT_FAILURE);
+
+    /* Success: Let the parent terminate */
+    if (pid > 0)
+        exit(EXIT_SUCCESS);
+
+    /* On success: The child process becomes session leader */
+    if (setsid() < 0)
+        exit(EXIT_FAILURE);
+
+    /* Catch, ignore and handle signals */
+    //TODO: Implement a working signal handler */
+    signal(SIGCHLD, SIG_IGN);
+    signal(SIGHUP, SIG_IGN);
+
+    /* Fork off for the second time*/
+    pid = fork();
+
+    /* An error occurred */
+    if (pid < 0)
+        exit(EXIT_FAILURE);
+
+    /* Success: Let the parent terminate */
+    if (pid > 0)
+        exit(EXIT_SUCCESS);
+
+    /* Set new file permissions */
+    umask(0);
+
+    /* Change the working directory to the root directory */
+    /* or another appropriated directory */
+    chdir("/");
+
+    /* Close all open file descriptors */
+    int x;
+    for (x = sysconf(_SC_OPEN_MAX); x>0; x--)
+    {
+        close (x);
+    }
+
+    /* Open the log file */
+    openlog ("firstdaemon", LOG_PID, LOG_DAEMON);
+}
+```
+
+Read More
+
+- [Creating a daemon in Linux](http://stackoverflow.com/questions/17954432/creating-a-daemon-in-linux)
+
+## Spawning Terminal Processes
+
+`execve()` 可以让你把其他进程取代现在处在的进程，但是一旦转化成其他进程之后，就不能返回到之前那个进程了。为了避免这个问题，一般会采用 `fork()` 和 `execve()` 一起使用。你可以先用 `fork()` 创建一个子进程，然后把子进程 `execve()`，这样你就可以保留你的父进程，并且可转化到你想去到的其他进程
+
+> 常常使用 `execve()` 来执行已经存在的命令
+
+`execve()` 不会当前进程的文件资源或者内存进行清理，也就是说，处用 `execve()` 转换到的进程，或者执行的命令就可以使用这些文件资源和内存数据
