@@ -159,3 +159,133 @@ arcs.append('text')
 ```
 
 `arc.centroid()` 这个函数就是找到第一个 `path` 的居中的位置
+
+## The Tree Layout
+
+一棵树主要包含的部分是节点和文本，节点小圈，还有连接节点的线，但是这里的线并不是直直的线，而是很和谐的曲线。这部分我们先来看看这条和谐的线是怎么出来的，一样的，先创建画布
+
+```javascript
+var canvas = d3.select('body').append('svg')
+               .attr('width', 500)
+               .attr('height', 500);
+```
+
+这条和谐的曲线的内部算法我们不用知道，因为 D3 已经帮我们做了，我们只要使用它的生成器就可以了，就像之前的直线生成器和圆弧生成器一样。还记得直线生器吗？它需要的是一个点的 `x` 和 `y` 坐标，而这次这个叫对角线生成器，需要的是一个出发点(source)和一个目标点(target)
+
+```javascript
+var diagonal = d3.svg.diagonal()
+                 .source({ x: 10, y: 10 })
+                 .target({ x: 300, y: 300 });
+```
+
+好了，我们定义好我们的生成器，就把它放在 `path` 的 `d` 属性里
+
+```javascript
+canvas.append('path')
+      .attr('d', diagonal)
+      .attr('fill', 'none')
+      .attr('stroke', 'black');
+```
+
+Nice! 
+
+那现在我们就做一棵树吧，老规矩，这里加了一个 `g` 是为了让树在中中间间，好看一点
+
+```javascript
+var canvas = d3.select('body')
+               .append('svg')
+               .attr('width', 500)
+               .attr('height', 500)
+               .append('g')
+               .attr('transform', 'translate(50, 50)');
+```
+
+然后我们还需要做一些前期的工作，包括对角线生成器还有 Tree Layout，还有我们的 `data` 对象
+
+```javascript
+var data = { /* something you like */ };
+
+var diagonal = d3.svg.diagonal();
+
+var tree = d3.layout.tree()
+             .size([400, 200]);
+```
+
+好，现在我们就用之前的 `diagonal` 先把优美曲线画出来
+
+```javascript
+var nodes = tree.node(data);
+var links = tree.links(nodes);
+
+canvas.selectAll('.link')
+      .data(links)
+      .enter()
+      .append('path')
+      .attr('class', 'link')
+      .attr('d', diagonal)
+      .attr('fill', 'none')
+      .attr('stroke', '#adadad');
+```
+
+上面的 `nodes` 和 `links` 是由 Tree Layout 的方法通过 `data` 生成的，可以通过打印它们来看看究竟是什么。现在下一步就是加上节点啦，也就是那些 `nodes`
+
+```javascript
+var node = canvas.selectAll('.node')
+                 .data(nodes)
+                 .enter()
+                 .append('g')
+                 .attr('class', 'node')
+                 .attr('transfrom', function (d) {
+                   return 'translate(' + d.x + ', ' + d.y + ')';
+                 });
+
+node.append('circle')
+    .attr('r', 5)
+    .attr('fill', 'steelblue');
+```
+
+如果理解了上面 Pie Layout 的例子，那么这个也就不难理解了。最后加上节点的文字
+
+```javascript
+node.append('text')
+    .text(function (d) { return d.name; });
+```
+
+## Cluster, Pack Layouts
+
+Cluster Layout 和 Tree Layout 基本是一样的，但是 Tree Layout 中的节点永远保持同级关系，而 Cluster Layout 会把所有的 leaf 节点放在同一水平线上
+
+Pack Layout 就像是维恩图，现在就来实现一下，`canvas` 和之前的一样，然后把 `tree` 变成 `pack` layout
+
+```javascript
+var pack = d3.layout.pack()
+             .size([300, 300])
+             .padding(10);
+```
+
+然后像之前 Tree Layout 创建节点一样
+
+```javascript
+var nodes = pack.nodes(data);
+
+var node = canvas.selectAll('.node')
+      .data(nodes)
+      .enter()
+      .append('g')
+      .attr('class', 'node')
+      .attr('transform', function (d) {
+        return 'translate(' + d.x + ', ' + d.y + ')';
+      });
+
+node.append('circle')
+    .attr('r', function (d) { return d.r; })
+    .attr('fill', 'steelblue')
+    .attr('opacity', '0.25')
+    .attr('stroke', '#adadad')
+    .attr('stroke-width', '2');
+
+node.append('text')
+    .text(function (d) {
+      return d.children ? '' : d.name;
+    });
+```

@@ -10,37 +10,69 @@
 <body>
   <script>
 
-    var data = [10, 50 ,80];
-
-    var color = ['#abcdef', '#F44336', '#F8C444'];
+    var data = {
+      value: 300,
+      name: 'Front-End',
+      children: [{
+        name: 'Web Development',
+        value: 100,
+        children: [{
+          name: 'jQuery',
+          value: 50
+        }, {
+          name: 'React',
+          value: 50
+        }, {
+          name: 'Anguler',
+          value: 50
+        }]
+      }, {
+        name: 'Mobile Development',
+        value: 100,
+        children: [{
+          name: 'React Navtive',
+          value: 50
+        }, {
+          name: 'NativeScript',
+          value: 50
+        }]
+      }, {
+        name: 'Native Development',
+        value: 100
+      }]
+    };
 
     var canvas = d3.select('body')
                    .append('svg')
                    .attr('width', 500)
-                   .attr('height', 500);
+                   .attr('height', 500)
+                   .append('g')
+                   .attr('transform', 'translate(50, 50)');
 
-    var group = canvas.append('g').attr('transform', 'translate(300, 300)');
+    var pack = d3.layout.pack()
+             .size([300, 300])
+             .padding(10);
 
-    var arc = d3.svg.arc()
-                .innerRadius(50)
-                .outerRadius(100);
+    var nodes = pack.nodes(data);
 
-    var pie = d3.layout.pie()
-                .value(function (d) { return d; });
+    var node = canvas.selectAll('.node')
+          .data(nodes)
+          .enter()
+          .append('g')
+          .attr('class', 'node')
+          .attr('transform', function (d) { return 'translate(' + d.x + ', ' + d.y + ')'; })
 
-    var arcs = group.selectAll('.arc')
-                    .data(pie(data))
-                    .enter()
-                    .append('g')
-                    .attr('class', 'arc');
+     node.append('circle')
+         .attr('r',function (d) { return d.r; })
+         .attr('fill', 'steelblue')
+         .attr('opacity', '0.25')
+         .attr('stroke', '#adadad')
+         .attr('stroke-width', '2');
 
-    arcs.append('path')
-        .attr('d', arc)
-        .attr('fill', function (d, i) { return color[i]; })
-
-    arcs.append('text')
-        .attr('transform', function (d) { return 'translate(' + arc.centroid(d) + ')'; })
-        .text(function (d) { return d.data; });
+    node.append('text')
+    .text(function (d) {
+      return d.children ? '' : d.name;
+    });
 
   </script>
 </body>
