@@ -289,3 +289,41 @@ node.append('text')
       return d.children ? '' : d.name;
     });
 ```
+
+## Histogram Layout
+
+这部分来介绍一下直方图，先从熟悉的东西做起，数据还有画布
+
+```javascript
+var data = [23, 14, 45, 12, 3];
+
+var canvas = d3.select('body').append('svg')
+               .attr('width', 500)
+               .attr('height', 500);
+```
+
+然后创建一个 Histogram Layout
+
+```javascript
+var histogram = d3.layout.histogram()
+                  .value(data);
+
+console.log(histogram);
+```
+
+我们可以看到 `histogram` 已经把我们把每一直方的宽度 `dx` 和 横坐标位置 `x` 还有纵坐标位置 `y` 都给我们返回了，那我们直接根据这些属性来生成我们的直方图就可以了
+
+```javascript
+var bars = canvas.selectAll('.bar')
+                 .data(histogram)
+                 .enter()
+                 .append('g')
+                 .attr('class', 'bar');
+
+bars.append('rect')
+    .attr('x', function (d) { return d.x * 5; })
+    .attr('y', 0)
+    .attr('width', function (d) { return d.dx * 5 - 5; })
+    .attr('height', function (d) { return d.y * 20; })
+    .attr('fill', 'steelblue');
+```

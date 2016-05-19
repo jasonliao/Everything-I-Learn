@@ -9,70 +9,51 @@
 </head>
 <body>
   <script>
+    var data = [23, 14, 45, 12, 3, 56, 6, 13, 89, 36, 71, 38, 11, 20 ,40, 60
+    , 47, 28, 49 ,39, 50, 69, 20, 10, 5, 73];
 
-    var data = {
-      value: 300,
-      name: 'Front-End',
-      children: [{
-        name: 'Web Development',
-        value: 100,
-        children: [{
-          name: 'jQuery',
-          value: 50
-        }, {
-          name: 'React',
-          value: 50
-        }, {
-          name: 'Anguler',
-          value: 50
-        }]
-      }, {
-        name: 'Mobile Development',
-        value: 100,
-        children: [{
-          name: 'React Navtive',
-          value: 50
-        }, {
-          name: 'NativeScript',
-          value: 50
-        }]
-      }, {
-        name: 'Native Development',
-        value: 100
-      }]
-    };
+    var width = 500;
+    var height = 500;
+    var padding = 50;
 
     var canvas = d3.select('body')
                    .append('svg')
-                   .attr('width', 500)
-                   .attr('height', 500)
-                   .append('g')
-                   .attr('transform', 'translate(50, 50)');
+                   .attr('width', width)
+                   .attr('height', height + padding)
 
-    var pack = d3.layout.pack()
-             .size([300, 300])
-             .padding(10);
+    var histogram = d3.layout.histogram()
+                      .bins(7)(data);
 
-    var nodes = pack.nodes(data);
+    var yScale = d3.scale.linear()
+                   .domain([0, d3.max(histogram.map(function (arr) {
+                           return arr.length;
+                           }))])
+                   .range([0, height]);
 
-    var node = canvas.selectAll('.node')
-          .data(nodes)
-          .enter()
-          .append('g')
-          .attr('class', 'node')
-          .attr('transform', function (d) { return 'translate(' + d.x + ', ' + d.y + ')'; })
+    var xScale = d3.scale.linear()
+                   .domain([0, d3.max(data)])
+                   .range([0, width]);
+    
+    var xAxis = d3.svg.axis()
+                  .scale(xScale)
+                  .orient('bottom');
 
-     node.append('circle')
-         .attr('r',function (d) { return d.r; })
-         .attr('fill', 'steelblue')
-         .attr('opacity', '0.25')
-         .attr('stroke', '#adadad')
-         .attr('stroke-width', '2');
+    var xAxixG = canvas.append('g')
+    .attr('transform', 'translate(15,' + height + ')')
+    .call(xAxis)
 
-    node.append('text')
-    .text(function (d) {
-      return d.children ? '' : d.name;
-    });
+    var bars = canvas.selectAll('.bar')
+                     .data(histogram)
+                     .enter()
+                     .append('g')
+                     .attr('class', 'bar');
+
+    bars.append('rect')
+    .attr('x', function (d) { return xScale(d.x); })
+    .attr('y', function (d) { return 500 - yScale(d.y); })
+    .attr('width', function (d) { return xScale(d.dx); })
+    .attr('height', function (d) { return yScale(d.y); })
+    .attr('fill', 'steelblue');
 
   </script>
 </body>
