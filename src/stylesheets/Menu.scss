@@ -1,0 +1,25 @@
+#Menu {
+  height: 100%;
+  margin-top: 20px;
+  a {
+    color: #444;
+  }
+  ul.collapsible {
+    height: 100%;
+  }
+  div.collapsible-body {
+    display: block;
+    border-bottom: none;
+  }
+  div.collapsible-header {
+    font-weight: bold;
+  }
+  .collection .collection-item {
+    border-bottom: none;
+    padding-left: 30px;
+  }
+  .collection .collection-item.active {
+    background: #03a9f4;
+    color: #eafaf9;
+  }
+}

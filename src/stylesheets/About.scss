@@ -1,0 +1,27 @@
+#About {
+  text-align: center;
+  color: #444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  .container {
+    width: 600px;
+  }
+  .row a:hover img.logo {
+    box-shadow: 0 5px 10px 4px #ddd;
+  }
+  img.logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px 2px #ddd;
+    transition: all 0.3s;
+  }
+  .logo.react {
+    background: #222;
+  }
+  .logo.material {
+    background: #eee;
+  }
+}

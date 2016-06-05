@@ -1,0 +1,24 @@
+#Sortutil {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  .input-array {
+    width: 250px;
+    margin: -6px 20px 0 20px;
+    height: 40px;
+  }
+  .switch {
+    display: inline-block;
+    .lever {
+      background: #84c7c1;
+    }
+    input[type=checkbox] + .lever:after {
+      background: #26a69a;
+    }
+  }
+  .btn-floating.btn-large {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+  }
+}

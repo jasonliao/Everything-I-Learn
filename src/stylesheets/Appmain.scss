@@ -1,0 +1,16 @@
+#Appmain {
+  margin: 0;
+  height: calc(100vh - 284px);
+  overflow: auto;
+  .col.s2, .col.s10 {
+    min-height: 342px;
+    height: 91%;
+  }
+  .col.s10 .card {
+    margin-top: 20px;
+    height: 100%;
+    .card-content {
+      height: 100%;
+    }
+  }
+}
