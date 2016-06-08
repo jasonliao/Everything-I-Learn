@@ -2,13 +2,14 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { changeSortType } from '../actions';
+import { changeSortType, changeSrotArray } from '../actions';
 
 import 'stylesheets/Menu.scss';
 
 const Menu = ({
   sortType,
-  changeSortType
+  changeSortType,
+  changeSrotArray
 }) => {
   const sorts = ['Bubble', 'Selection', 'Insertion', 'Merge', 'Radix', 'Quick', 'Shell'];
   return (
@@ -21,6 +22,7 @@ const Menu = ({
               const current = event.target.innerText;
               if (sortType === current) return;
               changeSortType(current);
+              changeSrotArray();
             }}> 
               {
                 sorts.map((sort, i) => {
@@ -41,7 +43,8 @@ const Menu = ({
 
 const mapDispatchsToProps = (dispatch) => {
   return {
-    changeSortType: bindActionCreators(changeSortType, dispatch)
+    changeSortType: bindActionCreators(changeSortType, dispatch),
+    changeSrotArray: bindActionCreators(changeSrotArray, dispatch)
   }
 };
 

@@ -1,18 +1,2 @@
 #Bubble {
-  height: 100%;
-  position: relative;
-  .canvas {
-    width: 100%;
-    height: calc(100% - 40px);
-    .highlight {
-      rect {
-        fill: #ffcc80;
-      }
-    }
-    .sorted {
-      rect {
-        fill: #ffa726;
-      }
-    }
-  }
 }

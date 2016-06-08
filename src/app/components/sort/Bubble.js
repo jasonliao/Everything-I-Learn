@@ -3,67 +3,19 @@ import d3 from 'd3';
 import { connect } from 'react-redux';
 
 import Sortutil from './Sortutil';
+import Base from './Base';
 
-import 'stylesheets/Bubble.scss';
-
-class Bubble extends React.Component {
+class Bubble extends Base {
   constructor (props) {
     super(props);
-    this.canvas
-    this.barsContainer;
-    this.bars;
-  }
-
-  componentDidMount () {
-    this.initialBars(this.props.randomArray);
-  }
-
-  componentDidUpdate () {
-    this.initialBars(this.props.randomArray);
-  }
-
-  initialBars (randomArray) {
-    this.canvas = d3.select('svg');
-    this.barsContainer = d3.select('g');
-
-    d3.selectAll('.bar').remove();
-
-    this.bars = this.barsContainer.selectAll('.bar').data(randomArray).enter().append('g').attr('class', 'bar');
-
-    this.bars.append('rect')
-      .attr('width', 40)
-      .attr('height', function (d) { return d * 3; })
-      .attr('x', function (d, i) { return i * 45; })
-      .attr('y', function (d) { return (d3.max(randomArray) - d) * 3; })
-      .attr('fill', '#b2dfdb')
-
-    this.bars.append('text')
-      .attr('x', function (d, i) { return i * 45 + 12; })
-      .attr('y', function (d) { 
-        if (d < 9) {
-          return (d3.max(randomArray) - d - 2) * 3; 
-        } else {
-          return  (d3.max(randomArray) - 3) * 3
-        }
-      })
-      .attr('fill', '#444')
-      .text(function (d) { return d; });
-
-    const barsContainerSize = this.barsContainer.node().getBBox(),
-          canvasWidth = parseFloat(this.canvas.style('width')),
-          canvasHeight = parseFloat(this.canvas.style('height')),
-          moveX = (canvasWidth - barsContainerSize.width) / 2,
-          moveY = (canvasHeight - barsContainerSize.height) / 2;
-
-    this.barsContainer.attr('transform', `translate(${moveX}, ${moveY})`);
   }
 
   bubbleSort () {
-    const rectsLength = this.bars.size();
-    const randomArray = this.props.randomArray;
+    const rectsLength = this.bars.size(); // sort array length
+    const randomArray = this.props.randomArray; // origin array
     let indexArray = new Array(rectsLength).fill(0).map((d, i) => {
       return i;
-    });
+    }); // index array
     let i = 0, j = 0, group;
     setInterval(() => {
       if (i < rectsLength - 1) {
@@ -101,7 +53,6 @@ class Bubble extends React.Component {
           } else {
             d3.select(group[0][1]).attr('class', 'sorted bar');
           }
-          console.log(group.data());
           i++;
           j = 0;
         }
@@ -114,7 +65,7 @@ class Bubble extends React.Component {
   render () {
     let { randomArray, isAsc } = this.props;
     return (
-      <div id="Bubble">
+      <div id="Bubble" className="svg-container">
         <svg className="canvas">
           <g className="bars-container"></g>
         </svg>

@@ -11,6 +11,29 @@
     height: 100%;
     .card-content {
       height: 100%;
+      .svg-container {
+        height: 100%;
+        position: relative;
+        .canvas {
+          width: 100%;
+          height: calc(100% - 40px);
+          .highlight {
+            rect {
+              fill: #ffcc80;
+            }
+          }
+          .sorted {
+            rect {
+              fill: #ffa726;
+            }
+          }
+          .highlight.selected {
+            rect {
+              fill: #ef5350;
+            }
+          }
+        }
+      }
     }
   }
 }
