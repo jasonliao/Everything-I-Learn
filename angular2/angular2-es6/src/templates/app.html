@@ -1,16 +1,16 @@
 <section class="todoapp">
 	<header class="header">
 		<h1>todos</h1>
-    <input class="new-todo" placeholder="What needs to be done?" autofocus="" [(ngModel)]="newTodoText" (keyup.enter)="addTodo($event)" >
+    <input class="new-todo" placeholder="What needs to be done?" autofocus [(ngModel)]="newTodoText" (keyup.enter)="addTodo()" >
 	</header>
 	<section class="main" *ngIf="todoStore.todos.length > 0">
-		<input class="toggle-all" type="checkbox" *ngIf="todoStore.todos.length" #toggleall [checked]="todoStore.allCompleted()" (click)="todoStore.setAllTo(toggleall.checked)">
+		<input class="toggle-all" type="checkbox"  #toggleall [checked]="todoStore.allCompleted()" (click)="todoStore.setAllTo(toggleall.checked)">
 		<ul class="todo-list">
 			<li *ngFor="let todo of todoStore.todos" [class.completed]="todo.completed" [class.editing]="todo.editing">
 				<div class="view">
-					<input class="toggle" type="checkbox" (click)="toggleCompletion(todo)" [checked]="todo.completed">
+					<input class="toggle" type="checkbox" (click)="todoStore.toggleCompletion(todo)" [checked]="todo.completed">
 					<label (dblclick)="editTodo(todo)">{{todo.title}}</label>
-					<button class="destroy" (click)="remove(todo)"></button>
+					<button class="destroy" (click)="todoStore.remove(todo)"></button>
 				</div>
 				<input class="edit" *ngIf="todo.editing" [value]="todo.title" #editedtodo (blur)="stopEditing(todo, editedtodo.value)" (keyup.enter)="updateEditingTodo(todo, editedtodo.value)" (keyup.escape)="cancelEditingTodo(todo)">
 			</li>
@@ -18,6 +18,6 @@
 	</section>
 	<footer class="footer" *ngIf="todoStore.todos.length > 0">
 		<span class="todo-count"><strong>{{todoStore.getWithCompleted(false).length}}</strong> {{todoStore.getWithCompleted(false).length == 1 ? 'item' : 'items'}} left</span>
-		<button class="clear-completed" *ngIf="todoStore.getWithCompleted(true).length > 0" (click)="removeCompleted()">Clear completed</button>
+		<button class="clear-completed" *ngIf="todoStore.getWithCompleted(true).length > 0" (click)="todoStore.removeCompleted()">Clear completed</button>
 	</footer>
 </section>

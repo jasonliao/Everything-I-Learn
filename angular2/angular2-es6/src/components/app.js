@@ -1,4 +1,4 @@
-import angular from 'angular2/core';
+import { Component } from 'angular2/core';
 
 import TodoStore from '../services/todostore';
 
@@ -7,17 +7,11 @@ class App {
     this.todoStore = new TodoStore();
     this.newTodoText = ''
   }
-  addTodo (event) {
+  addTodo () {
     if (this.newTodoText.trim().length) {
       this.todoStore.add(this.newTodoText);
       this.newTodoText = '';
     }
-  }
-  remove (todo){
-		this.todoStore.remove(todo);
-	}
-  toggleCompletion (todo) {
-    this.todoStore.toggleCompletion(todo);
   }
   editTodo (todo) {
     todo.editing = true;
@@ -39,13 +33,10 @@ class App {
 
 		todo.title = editedTitle;
 	}
-  removeCompleted () {
-		this.todoStore.removeCompleted();
-	}
 }
 
 App.annotations = [
-  new angular.Component({
+  new Component({
     selector: 'app',
     templateUrl: 'src/templates/app.html'
   })
