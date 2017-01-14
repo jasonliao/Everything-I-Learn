@@ -1,5 +1,4 @@
 # Start Developing  iOS Apps (Swift)
-#swift
 
 先跟着苹果开发者网站的 [FoodTracker](https://developer.apple.com/library/content/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html#//apple_ref/doc/uid/TP40015214-CH2-SW1) 这个 Demo 来学习一些简单的控件使用和 Xcode 的使用方法。
 
@@ -23,7 +22,7 @@ Stack view 可以把选中的组件包裹在一起来统一处理，可以设置
 
 然后我们再对 TextField 这个组件单独设置了左右边为 0 的 constraints，因为 TextField 是相对于 stack view 的，所以 TextField 的宽度也始终占满 stack view。那么就实现了，不管视窗多大的情况下，TextField 都会占满整个宽度的效果。
 
-![](Start%20Developing%20%20iOS%20Apps%20(Swift)/B1C69FA3-FE5F-4165-A6E8-55E3708EA970.png)
+![](http://ww3.sinaimg.cn/large/7988751agw1fbqknml3zjj20bg074dgn.jpg)
 
 ## Connect the UI to Code
 
@@ -49,8 +48,7 @@ Outlets 就是刚刚 UI 组件对象的一个引用，在 Xcode 里可以直接�
 
 我们可以点击了某个组件之后，在 Utilities 的 connections inspector 里可以看到 outlet 的引用，如果有多个，或者有引入却没有在代码中使用的时候，就会报上述的错误。
 
-![](Start%20Developing%20%20iOS%20Apps%20(Swift)/C3023A6F-053D-401C-949D-33FD358DFAD6.png)
-
+![](http://ww3.sinaimg.cn/large/7988751agw1fbqktr8m6oj20eg08ujsq.jpg)
 
 ### Process User Input
 
