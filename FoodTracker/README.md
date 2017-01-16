@@ -84,4 +84,93 @@ func textFieldDidEndEditing(_ textField: UITextField) {
 }
 ```
 
-到这里这两节就完了，当打开 App 的时候可以直接聚集到这个 TextField 上，可以在 `viewDidLoad` 这个方法里，执行 `nameTextField.becomeFirstResponder()` 这个方法，那么这个 TextField 就会自动聚焦，并且弹出键盘。∂
+到这里这两节就完了，当打开 App 的时候可以直接聚集到这个 TextField 上，可以在 `viewDidLoad` 这个方法里，执行 `nameTextField.becomeFirstResponder()` 这个方法，那么这个 TextField 就会自动聚焦，并且弹出键盘。
+
+## Work with View Controllers
+
+### Understand the View Controller Lifecycle
+
+![](https://developer.apple.com/library/content/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Art/WWVC_vclife_2x.png)
+
+### Add a Meal Photo
+
+这里只要使用组件直接拖拽一个 image view 出来就可以了，这里主要是如何在项目中引入一张图片：
+
+1. 先在 Assets.xcassets 里 New Image Set。
+2. 然后对新的 image set 双击设定一个名字。
+3. 然后把图片拖拽到其中一个框框里，不同的框框代码代表不同的分辨率，在不同的设备上显示不同。
+4. 然后选择 image view，在属性的 image 里下拉就可以看我们刚刚命名的图片，选中就可以了。
+
+### Create a Gesture Recognizer
+
+我们需要给 image view 一个 tap gesture 是因为在更换图片的时候，我们需要点击这个区域，这个手势同样需要添加进来，而添加的方法和添加组件的方式一样，同样是在 object library 里找到，拖拽到 image view 上就可以了。
+
+### Connect the Gesture Recognizer to Code
+
+从 scene dock 里一样 ctrl 拖拽到代码中，选择 action，就会在代码里多出这样的一个 action。
+
+```swift
+@IBAction func selectImageFromPhotoLibrary(_ sender: UITapGestureRecognizer) {
+}
+```
+
+### Create an Image Picker to Respond to User Taps
+
+点击之后，需要弹出一个选择图片的 image picker，和 UITextFieldDelegate 一样，image picker 也需要一个这样的委托类，同时，还需要一些简单的负责导航的功能，所以我们的 ViewController 需要继承多两个类。
+
+```swift
+class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {}
+```
+
+这时就要实现 `selectImageFromPhotoLibrary` 这个 action。我们先创建一个照片的选择器
+
+```swift
+let imagePickerController = UIImagePickerController()
+```
+
+然后把这个选择器的照片源设定一下，只可以比照片中选，不可以拍照等等。
+
+```swift
+imagePickerController.sourceType = .photoLibrary
+```
+
+然后确保当用户选择了图片之后，ViewController 可以知道
+
+```swift
+imagePickerController.delegate = self
+```
+
+当照片选择器出现了之后，我们需要对两个动作进行监听，一个就是用户点击取消按钮的时候，另一个就是当用户选择了照片之后，所以我们要分别实现 `imagePickerControllerDidCancel` 和 `imagePickerController` 这两个函数。
+
+第一个很简单，就是当用户点击取消之后，我们把照片选择器关掉就可以了
+
+``` swift
+func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+	// Dismiss the picker if the user canceled.
+	dismiss(animated: true, completion: nil)
+}
+```
+
+而第二个就是先把用户选择的第一张照片拿到，然后设置到 image view 的图片，然后再关掉照片选择器
+
+```swift
+func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+	// The info dictionary may contain multiple representations of the image. You want to use the original.
+	guard let selectedImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+		fatalError("Expected a dictionary containing an image, but was provided the following: \(info)")
+	}
+        
+	// Set photoImageView to display the selected image.
+	photoImageView.image = selectedImage
+        
+	// Dismiss the picker.
+	dismiss(animated: true, completion: nil)
+}
+```
+
+这时按照教程的要求是把 app 跑起来，点击选择照片之后报错，因为我们还需要去处理一下请求访问用户相册的权限。但是却到这一步之前，我点击 image view 却没有反应。
+
+回到 storyboard，选择了 image view 之后，在属性面板里有一个 User Interaction Enabled，勾选上就可以了。
+
+之后就是和教程一样的在 `info.plist` 里添加 Privacy - Photo Library Usage Description 即可。
+
