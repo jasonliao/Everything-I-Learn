@@ -174,3 +174,108 @@ func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMe
 
 之后就是和教程一样的在 `info.plist` 里添加 Privacy - Photo Library Usage Description 即可。
 
+Implement a Custom Control
+
+### Create a Custom View
+
+ 在这个例子中，我们需要新建一个 stack view 来装载我们自定义的界面。但是我们是先定义这个 stack view 的文件，然后拖拽一个 stack view 的组件，然后再将他们绑在一块。
+
+新建一个 stack view 的文件非常简单，`command+N` 新建，选择 iOS，设定类的名字，然后在子类中选择 `UIStackView`。
+
+然后我们就可以看到我们的文件里有下列的代码 
+
+```swift
+import UIKit
+class RatingControl: UIStackView {}
+```
+
+我们创建一个视图一般会有两个方法：第一个就是通过代码初始化，而另一个就是通过 storyboard。
+
+`init(frame:)` 这个是通过代码初始化时需要，`init(coder:)` 是通过 storyboard 初始化时需要。
+
+在这个例子中，我们这两个 `init` 方法都需要实现。
+
+```swift
+override init(frame: CGRect) {
+    super.init(frame: frame)
+}
+ 
+required init(coder: NSCoder) {
+    super.init(coder: coder)
+}
+```
+
+### Display the Custom View
+
+定义完文件之后，就去组件库拖拽一个 stack view 的组件出来，然后在 Identity inspector 中的 class 下拉中选择我们刚刚新建的那个 stack view 文件里的类，那么这时候这两个 stack view 的代码和视图就连在一起了。
+
+### Add Buttons to the View
+
+我们需要在这个 stack view 里创建一个按钮，这就需要我们在之前的 stack view 的文件里定义一个 `setButtons` 方法，因为这个只在这个类里使用，所以可以使用 `private` 关键字
+
+```swift
+private func setupButtons() {
+    // Create the button
+    let button = UIButton()
+    button.backgroundColor = UIColor.red
+    
+    // Add constraints
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.heightAnchor.constraint(equalToConstant: 44.0).isActive = true
+    button.widthAnchor.constraint(equalToConstant: 44.0).isActive = true
+    
+    // Add the button to the stack
+    addArrangedSubview(button)
+}
+```
+
+然后在两个 `init` 方法里调用这个方法。在初始化的时候生成这个按钮，接着我们就为这个按钮来添加事件。
+
+先写一个事件函数
+
+```swift
+func ratingButtonTapped(button: UIButton) {
+    print("Button pressed 👍")
+}
+```
+
+然后把这个事件函数绑定在刚刚我们创建的按钮上。上一节我们为一个按钮绑定一个 action 我们可以在 storyboard 中通过拖拽的方式来完成，但这一次我们则是通过 `addTarget` 这个方法来完成。
+
+`addTarget` 这个方法有三人参数：
+
+1. 第一个是 `target`。我们使用 `self`，也就是这个 stack view 的类。
+2. 第二个事件函数。就是我们刚刚定义的 `ratingButtonTapped`。但是我们还需要 `#selector` 这个函数来把他选中。`#selector(RatingControl.ratingButtonTapped(button:))`
+3. 第三个是什么动作触发。一般的点击事件我们都选用 `.touchUpInside` ，因为当用户点击下去但是后悔的时候，就可以拖拽离开按钮区，这样这个方法就不会触发了。
+
+所以我们在 `addArrangedSubview(button)` 这句代码前加上 
+
+```swift
+button.addTarget(self, action: #selector(RatingControl.ratingButtonTapped(button:)), for: .touchUpInside)
+```
+
+### Add Star Images to the Buttons
+
+像上一节为 image view 添加照片一样，我们先把素材相片添加到 Assets.xcassets 里面，添加一个文件夹，然后在里面添加三张素材图片。
+
+然后在代码里把这三张素材照片拿到
+
+```swift
+// Load Button Images
+let bundle = Bundle(for: type(of: self))
+let filledStar = UIImage(named: "filledStar", in: bundle, compatibleWith: self.traitCollection)
+let emptyStar = UIImage(named:"emptyStar", in: bundle, compatibleWith: self.traitCollection)
+let highlightedStar = UIImage(named:"highlightedStar", in: bundle, compatibleWith: self.traitCollection)
+```
+
+然后把按钮的背景换成图片
+
+```swift
+// Set the button images
+button.setImage(emptyStar, for: .normal)
+button.setImage(filledStar, for: .selected)
+button.setImage(highlightedStar, for: .highlighted)
+button.setImage(highlightedStar, for: [.highlighted, .selected])
+```
+
+一个按钮有5种状态，normal、highlighted、focused、selected 和 disabled。
+
