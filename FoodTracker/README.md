@@ -174,7 +174,7 @@ func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMe
 
 之后就是和教程一样的在 `info.plist` 里添加 Privacy - Photo Library Usage Description 即可。
 
-Implement a Custom Control
+## Implement a Custom Control
 
 ### Create a Custom View
 
@@ -278,4 +278,84 @@ button.setImage(highlightedStar, for: [.highlighted, .selected])
 ```
 
 一个按钮有5种状态，normal、highlighted、focused、selected 和 disabled。
+
+## Define Your Data Model
+
+### Create a Data Model
+
+   这一节是关于如何创建和测试自己定义的数据模型。首先创建数据模型需要定义一个数据类，新建一个 swift 的文件，`import UIKit` 就可以了。
+
+```swift
+import UIKit
+class Meal {}
+```
+
+然后定义有哪些属性，可选择的的属性后面加 `?`
+
+```swift
+var name: String
+var photo: UIimage?
+var rating: Int
+```
+
+使用 `var` 去定义这些属性是因为将来我们会改变他们的值，所以不采用之前一直使用的 `let`
+
+接着我们就需要对这个数据模型进行初始化。
+
+```swift
+init?(name: String, photo: UIimage, rating: Int) {
+    if name.isEmpty || rating < 0 {
+        return nil
+    }
+
+    self.name = name
+    self.photo = photo
+    self.rating = rating
+}
+```
+
+这里需要做一个判断，就是 meal 的 name 不可以为空，而且 rating 的值也不可以为负数，否则就会返回 `nil`，也正是因为这样，`init` 函数就有可能初始化不成功，所以 `init` 函数后也有一个 `?`。
+
+### Test Your Data
+
+我们的数据模型初始化得对不对，可以通过单元测试来检测， 我们的项目里也有一个 `FoodTrackerTests.swift` 的文件用于给我们的代码做单元测试。
+
+我们先定义一个 `testMealInitializationSucceeds` 函数，用于装载成功的单元测试例子，`testMealInitializationFails` 则相反
+
+```swift
+func testMealInitializationSucceeds() {
+    let zeroRatingMeal = Meal.init(name: "Zero", photo: nil, rating: 0)
+    XCTAssertNotNil(zeroRatingMeal)
+        
+    let positiveRatingMeal = Meal.init(name: "Positive", photo: nil, rating: 5)
+    XCTAssertNotNil(positiveRatingMeal)
+}
+    
+func testMealInitializationFails() {
+    let negativeRatingMeal = Meal.init(name: "Negative", photo: nil, rating: -1)
+    XCTAssertNil(negativeRatingMeal)
+        
+    let largeRatingMeal = Meal.init(name: "Large", photo: nil, rating: 6)
+    XCTAssertNil(largeRatingMeal)
+        
+    let emptyStringMeal = Meal.init(name: "", photo: nil, rating: 0)
+    XCTAssertNil(emptyStringMeal)
+}
+```
+
+我们可以通过 `command + u` 来跑我们的测试，发现测试不通过，原因是我们只判断的 `rating` 是不是正数，并没有判断它的值是不是超过了5，因为我们只有5颗星。
+
+所以 `if` 语句修改为这样
+
+```swift
+guard !name.isEmpty else {
+    return nil
+}
+
+guard (rating >= 0) && (rating <= 5) else {
+    return nil
+}
+```
+
+在一些情况下，使用 `guard` 比 `if` 优雅得多，例 [Swift 2.0: Why Guard is Better than If](http://www.jianshu.com/p/9fff7621ed75)
 
