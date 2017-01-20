@@ -359,3 +359,102 @@ guard (rating >= 0) && (rating <= 5) else {
 
 在一些情况下，使用 `guard` 比 `if` 优雅得多，例 [Swift 2.0: Why Guard is Better than If](http://www.jianshu.com/p/9fff7621ed75)
 
+## Create a Table View
+
+### Create the Meal List
+
+UITableView 这个视图专门用于显示一些列表，而与之相对应的 UITableViewController 就是用于对这一类视图的行为进行控制。
+
+我们先在 storyboard 里拖拽出一个 Table View Controller，它是一整个视图，拖拽出来之后放在我们原来的已经存在的视图的左边，并且把进入箭头放在刚刚拖拽出来的视图的左边，这就意味着应用刚刚启动的时候，会从这个新的视图开始。
+
+点击 Table View 可以设置第一行的高度，而每一行，被称为 Table View Cell，现在先来自定义一个 Table View Cell
+
+### Design Custom Table Cells
+
+我们在 storyboard 里看到一行 Table View Cell，这就是我们的原型，因为下面每一行的样式行为都是一样的，所以我们只要设定一行就可以了。
+
+我们需要新建一个 MealTableViewCell 的类继承于 UITableViewCell，用于声明这一行里会有点什么，同时我们还需要把 storyboard 里的 Table View Cell 与这个文件绑定起来。
+
+这里需要两步：
+
+1. 在 Attributes inspector 的 Identifier 字段里写上刚刚我们创建的那个文件，也就是 MealTableViewCell
+2. 在 Identity inspector 的 Class 字段里同样选中 MealTableViewCell
+
+接下来就可以在 storyboard 里的那一行 Table View Cell 里，通过拖拽组件把我们想要展示的东西组合起来。但是我们跑起应用来的时候，这个界面并不会出现，因为 Table View 需要 Table View Controller 来对我们刚刚的界面实例化出来。
+
+我们刚刚把 storyboard 里的 Table View Cell 与 MealTableViewCell 这个类绑定起来了，但是 Cell 里的新建组件却没有在类里声明，很简单，像之前一样，把组件按住 ctrl 拖拽到代码里生成就可以了。
+
+### Load Initial Data
+
+刚刚说了，Table View Cell 里的东西都只是一个原型，要想在应用里显示出来，就要靠 Controller 去实例化，所以现在就来新建我们的 MealTableViewController。
+
+新建这个文件之后已经有很多的模板代码了，但先不管，我们定义一个 `meals` 的属性，`meals` 是一个数组，里面装的都是上一节创建的 `Meal` 这个类的实例。
+
+```swift
+var meals = [Meal]()
+```
+
+然后还有一个私有的方法，用于加载每一个 Table View Cell 的数据。首先加载三张食物的照片，然后通过 Meal 的 `init` 方法生成三个实例，然后把这三个实例放到 `meals` 这个数组中
+
+```swift
+private func loadSimpleMeals() {
+    let photo1 = UIImage(named: "meal1")
+    let photo2 = UIImage(named: "meal2")
+    let photo3 = UIImage(named: "meal3")
+
+    guard let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4) else {
+        fatalError("Unable to instantiate meal1")
+    }
+ 
+    guard let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5) else {
+        fatalError("Unable to instantiate meal2")
+    }
+ 
+    guard let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3) else {
+        fatalError("Unable to instantiate meal2")
+    }
+
+    meals += [meal1, meal2, meal3]
+}
+```
+
+然后在 `viewDidLoad()` 这个方法里，调用 `loadSimpleMeals()`。
+
+### Display the Data
+
+要想把 Table View 的数据用刚刚的 Table View Cell 原型展示出来，需要两个很重要的东西，一个是数据源，另一个则是委托。数据源就是需要展示界面里填充的数据，而委托则是负责监听 Cell 的选择，点击等等的事件。
+
+一个 Table View 需要这三个函数来支持数据源
+
+```swift
+func numberOfSections(in tableView: UITableView) -> Int
+func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+```
+
+`numberOfSections` 就是这个 Table View 要显示多少个部分，在这里只需要一个 Section 就可以了，一个 Sections 里可以包含多个 Cell。所以直接在代码里返回 1 就可以了。
+
+`tableView(_:numberOfRowsInSection:)` 这个就是 Section 里要展示多少行，也就是多少个 Cell，在这里我们返回 `meals.count`。
+
+`tableView(_:cellForRowAt:)` 这个方法会在每展示一行的时候调用一次，这里我们就需要获取 `meals` 的数据，用 `MealTableViewCell` 这个类构造一个 Cell，返回给 Table View 用
+
+```swift
+override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cellIdentifier = "MealTableViewCell"
+        
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MealTableViewCell  else {
+        fatalError("The dequeued cell is not an instance of MealTableViewCell.")
+    }
+        
+    let meal = meals[indexPath.row]
+        
+    cell.nameLabel.text = meal.name
+    cell.photoImageView.image = meal.photo
+    cell.ratingControl.rating = meal.rating
+        
+    return cell
+}
+```
+
+最后，把 MealTableViewController 与 storyboard 里的 Table View 连在一起，选择整个 Table View，然后在Identity inspector 的 Class 里下拉选择 MealTableViewController 即可。
+
