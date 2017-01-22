@@ -458,3 +458,72 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
 
 最后，把 MealTableViewController 与 storyboard 里的 Table View 连在一起，选择整个 Table View，然后在Identity inspector 的 Class 里下拉选择 MealTableViewController 即可。
 
+## Implement Navigation
+
+### Add a Segue to Navigate Forward
+
+两个视图的转换，称为 Segue。
+
+为一个视图添加一个导航很简单，首先点击一下想要添加导航的视图，然后 Editor > Embed In > Navigation Controller 就可以了。然后下一步就是定制导航
+
+### Configure the Navigation Bar for the Scenes
+
+定制导航也非常的简单，只要双击导航条，就可以为导航添加一个 title。
+
+我们常常看到导航的左侧或者右侧有一个按钮，这个按钮的组件叫做 Bar Button Item，这个组件非常的方便，因为 xcode 内置会给你很多种类型的导航按钮，我们可以在 Attributes inspector 的 System Item 里找到很多不同的类型。
+
+想要把按钮和另一个视图连在一起，只要按住 ctrl 点击按钮并拖拽到相应的视图就可以了。这时会弹出一个窗口，让你选择 Segue 的类型，这个例子给我们介绍了两个类型。
+
+Show Segue 会给你的所连接的视图自动添加一个 Navigation Bar，并且在左方有一个后退键，点击后退键会自动回到之前的那个视图，而且视图默认从右边滑动进入。
+
+Present Modally 这个 Segue 不会为接连的视图添加 Navigation Bar，这样可以更加的自由，因为你可以为这个视图加上并且添加不同类型的 Bar Button Item。这个例子采用的就是这个 Segue，并为连接的视图添加一个 Navigation Bar，左边为 Cancel，右边为 Save 的 Bar Button Item。
+
+### Create an Unwind Segue
+
+当一个 Segue 触发的时候，`prepare(for:sender:)` 方法就会调用，我们需要在这个方法里面，把用户输入的一些东西，选择的一些图片，保存起来，所以我们在 `MealViewController` 里实现这个方法，在点击 Save 跳转回 Table View 之前，把这个视图里的信息保存起来。
+
+``` swift
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    super.prepare(for: segue, sender: sender)
+    
+    guard let button = sender as? UIBarButtonItem, button === saveButton else {
+        os_log("The save button was not pressed, cancelling", log: OSLog.default, type: .debug)
+        return
+    }
+    
+    let name = nameTextField.text ?? ""
+    let photo = photoImageView.image
+    let rating = ratingControl.rating
+   
+    meal = Meal(name: name, photo: photo, rating: rating)
+}
+```
+
+然后在 `MealTableViewController` 里定义一个方法，这个方法就是点击 Save 之后的操作，为什么 Save 按钮是在 MealView 里，但是却定义在 MealTableView 里呢？
+
+这就是 unwind segue。他需要在 action 定义在目标视图里，而它的参数就是跳转之前的那个视图，我们可以通过它拿到 meal，然后添加到 Table View 里。
+
+```swift
+@IBAction func unwindToMealList(sender: UIStoryboardSegue) {
+    if let sourceViewController = sender.source as? MealViewController, let meal = sourceViewController.meal {
+        
+        let newIndexPath = IndexPath(row: meals.count, section: 0)
+        
+        meals.append(meal)
+        tableView.insertRows(at: [newIndexPath], with: .automatic)
+    }
+}
+```
+
+那这个 action 怎么和 Save 按钮绑定在一起呢，只需要按住 ctrl 把 Save 按钮拖拽到本身视图的 Exit ，表示要点击完这样按钮后回到之前的视图。拖拽完后会出现一个弹窗，选择 action segue，然后选择我们刚刚的 `unwindToMealList` 就可以了。
+
+而点击 Cancel 之后返回之前的视图，用我们熟悉的方法，按住 ctrl 把 Cancel 按钮拖拽到 `MealViewController` 生成 action 就可以了。
+
+```swift
+@IBAction func cancel(_ sender: UIBarButtonItem) {
+    dismiss(animated: true, completion: nil)
+}
+```
+
+调用 `dismiss` 方法会直接回到之前的视图，不会调用 `prepare` 方法。
+
