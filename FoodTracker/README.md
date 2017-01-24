@@ -527,3 +527,116 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 调用 `dismiss` 方法会直接回到之前的视图，不会调用 `prepare` 方法。
 
+## Implement Edit and Delete Behavior
+
+### Enable Editing of Existing Meals
+
+点击每一个 Table View Cell 的时候要跳到 MealView 详情页里进行编辑，我们只要选中 Table View Cell 然后按住 ctrl 拖拽到 MealView 就可以了。这时也会让我们选择 Segue 的类型，这里选择的是 show，这个时候进来的 MealView 不会有后退键因为我们已经为这个视图添加了两个 Bar Button。
+
+点击 Bar Button 的 + 和点击 Table View Cell 都会打开 MealDetailView，而在跳转之前，都会调用 MealTableViewController 里的 prepare 方法，这里就要通过 segue 的 identifier 来区别，segue 的 identifier 可以通过在 Attributes inspector 里设置。
+
+```swift
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    super.prepare(for: segue, sender: sender)
+    
+    switch(segue.identifier ?? "") {
+    case "AddItem":
+        os_log("Adding a new meal.", log: OSLog.default, type: .debug)
+        
+    case "ShowDetail":
+        guard let mealDetailViewController = segue.destination as? MealViewController else {
+            fatalError("Unexpected destination: \(segue.destination)")
+        }
+        
+        guard let selectedMealCell = sender as? MealTableViewCell else {
+            fatalError("Unexpected sender: \(sender)")
+        }
+        
+        guard let indexPath = tableView.indexPath(for: selectedMealCell) else {
+            fatalError("The selected cell is not being displayed by the table")
+        }
+        
+        let selectedMeal = meals[indexPath.row]
+        mealDetailViewController.meal = selectedMeal
+        
+    default:
+        fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+    }
+}
+```
+
+当我们是点击 Table View Cell 的跳转的时候，我们就获取目的视图，就是 MealDetailView，还有点击的 Table View Cell，并通过它得到排第几。然后就可以通过这个下标获取到 `meals` 里对应的 Meal 对象，然后赋值给 MealDetailView 里的 `meal` 变量。
+
+然后再在 MealViewController 的 `viewDidLoad` 里对 `meal` 变量进行判断，如果 `meal` 不为 `nil`，就把里面相应的信息给到对应的组件中。
+
+```swift
+if let meal = meal {
+    navigationItem.title = meal.name
+    nameTextField.text   = meal.name
+    photoImageView.image = meal.photo
+    ratingControl.rating = meal.rating
+}
+```
+
+接着我们就要对 Save 按钮做处理了，上一节说了，Save 为 unwind action，所以是定义在目标视图的 controller 里的，也就是 MealTableViewController 里。
+
+```swift
+@IBAction func unwindToMealList(sender: UIStoryboardSegue) {
+    if let sourceViewController = sender.source as? MealViewController, let meal = sourceViewController.meal {
+        
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            // Update an existing meal.
+            meals[selectedIndexPath.row] = meal
+            tableView.reloadRows(at: [selectedIndexPath], with: .none)
+        }
+        else {
+            // Add a new meal.
+            let newIndexPath = IndexPath(row: meals.count, section: 0)
+            
+            meals.append(meal)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        }
+    }
+}
+```
+
+`if let selectedIndexPath = tableView.indexPathForSelectedRow` 这句话判断 Table View 里是否存在点击过的 Cell，如果存在，表明是在 edit 状态。然后获取点击的行，通过行作为下标改变 `meals` 数组里相应的 `meal` 对象。然后再重新加载这一行。就可以看到修改后的数据了。
+
+### Cancel an Edit to an Existing Meal
+
+如果我们想放弃修改，点击 Cancel 并不会回来之前的视图，这是为什么呢？
+
+ 不同的展示类型有不同的用途，Present Modally 一般会用在用户要么一定要完成或者直接取消的任务中，例如之前的增加一个 meal，而 Show 这种一般使用导航的展示方法一般用在查看或者修改这样的情况中。
+
+* Show(Push)：是在 Navigation View Controller 里，进入时由右向左，退出时由左向右。新压入的视图控制器有返回按钮（如果没有设置 Bar Button），单击可以返回。
+* Present Modally：一般以动画的形式自下向上覆盖整个屏幕，用户无法与上一个视图交互，除非关闭当前视图。
+
+而上一节的 `dismiss` 只能用于 Present Modally 这种展示的方法。
+
+```swift
+@IBAction func cancel(_ sender: UIBarButtonItem) {
+    let isPresentingInAddMealMode = presentingViewController is UINavigationController
+    
+    if isPresentingInAddMealMode {
+        dismiss(animated: true, completion: nil)
+    }
+    else if let owningNavigationController = navigationController {
+        owningNavigationController.popViewController(animated: true)
+    }
+    else {
+        fatalError("The MealViewController is not inside a navigation controller.")
+    }
+}
+```
+
+当 AddMeal 的时候采用的是 Present Modally，所以这时的 MealViewController 是继承于 UINavigationController 的，所以此时的 `isPresentingInAddMealMode` 为 true，可以直接用 `dismiss` 方法来退出这个视图。
+
+而 ShowDetail 的时候采用的是 Show，这时相当于把 MealDetailView 直接推进 MealTableView 里，而用 `navigationController` 可以获得推进的 MealDetailView 的 UINavigationController，然后调用 `popViewController` 就可以让 MealDetailView 弹出。
+
+### Support Deleting Meals
+
+要添加删除功能就在 MealTableView 的左上角添加一个 Edit 的按钮，但如果像以前一样拖拽一个 Bar Button 出来，并把类型定义为 Edit，当我们点击的时候，并没有反应，因为还需要添加相应的操作。但如果我们直接在 `viewDidLoad` 里添加 `navigationItem.leftBarButtonItem = editButtonItem`，就会生成一个含有行为的 Edit 按钮。
+
+然后把 `tableView` 关于 edit 的两个模板方法重写就可以了。
+
+
