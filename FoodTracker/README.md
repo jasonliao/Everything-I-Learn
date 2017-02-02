@@ -639,4 +639,101 @@ if let meal = meal {
 
 然后把 `tableView` 关于 edit 的两个模板方法重写就可以了。
 
+## Persist Data
 
+数据持久化是应用开发中很重要的一部分，而且有很多很多的方法。在这个应用中，我们采用的是 NSCoding。
+
+### Save and Load the Meal
+
+用 Meal 这个类继承了 NSCoding 的方法之后，就可以用来存储和加载数据，首先先建立一个结构体来对应起我们 Meal 这个类的一些属性。
+
+```swift
+struct PropertyKey {
+  static let name = "name"
+  static let photo = "photo"
+  static let rating = "rating"
+}
+```
+
+这就是数据存储的结构，采用 `static` 关键字是指这些常量是 `PropertyKey` 的本身的，并属于它的实例，当访问里面变量的时候，采用 `PropertyKey.name` 这种形式。
+
+为了可以存储和加载数据，Meal 这个类就要符合 NSCoding 协议，所以 Meal 就要继承 NSCoding，但除此之外，还要继承 NSObject，用于定义基本接口的需要。
+
+```swift
+class Meal: NSObject, NSCoding {}
+```
+
+继承了NSCoding 协议的类需要实现下面两个方法来实现存储和加载。
+
+```swift
+encode(with aCoder: NSCoder)
+init?(coder aDecoder: NSCoder)
+```
+
+先来实现存储的方法，把类里的值（第一个参数）与结构体对应的键存储起来。
+
+```swift
+func encode(with aCoder: NSCoder) {
+    aCoder.encode(name, forKey: PropertyKey.name)
+    aCoder.encode(photo, forKey: PropertyKey.photo)
+    aCoder.encode(rating, forKey: PropertyKey.rating)
+}
+```
+
+接下来是加载数据的初始化方法
+
+```swift
+required convenience init?(coder aDecoder: NSCoder) {
+    
+    guard let name = aDecoder.decodeObject(forKey: PropertyKey.name) as? String else {
+        os_log("Unable to decode the name for a Meal object.", log: OSLog.default, type: .debug)
+        return nil
+    }
+    
+    let photo = aDecoder.decodeObject(forKey: PropertyKey.photo) as? UIImage
+    let rating = aDecoder.decodeInteger(forKey: PropertyKey.rating)
+    
+    self.init(name: name, photo: photo, rating: rating)
+}
+```
+
+接下来就是定义数据存储的路径了。
+
+```swift
+static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+static let ArchiveURL = DocumentsDirectory.appendingPathComponent("meals")
+```
+
+这些变量都是 `static` 的，同样可以通过 `Meal.ArchiveURL.path` 这样来访问。
+
+### Save and Load the Meal List
+
+保存和加载 MealList 都是在 MealTableViewController 里面完成。
+
+先来完成保存的私有方法 `saveMeals`，直接调用方法把 `meals`  这个数组保存到文件里即可，打印语句用于检测。
+
+```swift
+private func saveMeals() {
+    let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meals, toFile: Meal.ArchiveURL.path)
+
+    if isSuccessfulSave {
+        os_log("Meals successfully saved.", log: OSLog.default, type: .debug)
+    } else {
+        os_log("Failed to save meals...", log: OSLog.default, type: .error)
+    }
+}
+```
+
+然后需要在编辑和删除 MealList 的时候调用一下保存方法，保存一下数据。也就是 `unwindToMealList` 和 `tableView` 这两个方法里。
+
+然后实现加载的私有方法 `loadMeals`。
+
+```swift
+private func loadMeals() -> [Meal]?  {
+    return NSKeyedUnarchiver.unarchiveObject(withFile: Meal.ArchiveURL.path) as? [Meal]
+}
+```
+
+`loadMeals` 函数具有返回值，要么是 Meal 对象的数组，或者是 nil。然后在 `viewDidLoad` 方法里调用一下 `loadMeals` 就可以了。
+
+这只是持久化数据的其中一种方法。更加方法可以查看[这里](http://www.jianshu.com/p/7616cbd72845)
