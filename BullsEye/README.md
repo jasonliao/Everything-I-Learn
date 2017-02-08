@@ -57,6 +57,42 @@ slider.setMaximumTrackImage(trackRightResizable, for: .normal)
 
 因为图片要连成一条，所以要为左右两边的图片重新设置大小，让图片连接起来。所以使用 `resizableImage` 可以修改一下图片，而修改图片需要使用的 `insets` 需要提前定义，把 `left` 和 `right` 都延伸一点就可以了。
 
+## WebView
+
+加载一个 `.html` 进来 webView 的方法很简单，可以在 `viewDidLoad` 方法里面执行或者包成一个函数在里面调用。主要的步骤是先找到项目里这个 `.html` 文件的，然后把它转成 HTML 数据，然后再用 webView 调用 `load` 方法就可以了。
+
+```swift
+if let url = Bundle.main.url(forResource: "BullsEye", withExtension: "html") {
+    if let htmlData = try? Data(contentsOf: url) {
+        let baseURL = URL(fileURLWithPath: Bundle.main.bundlePath)        webView.load(htmlData, mimeType: "text/html", textEncodingName: "UTF-8", baseURL: baseURL)
+    }
+}
+```
+
+## 适配
+
+### 小尺寸
+
+主要使用 constraints 来做 auto layout。关于 Auto Layout，Apple Developer 专门有一个 [Auto Layout Guide](https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/AutolayoutPG/) 来讲解。
+
+### 大尺寸
+
+去适配大尺寸的方法有很多，这一种是最简单的一种，如果应用没有去特意支持大尺寸的屏幕，那么应用就会自动去按比例放大整个应用。但是要想达到这个效果，就必须去除 `LaunchScreen.storyboard` 这个文件。第一步，delete。第二步，在项目设置里，把  Launch Screen File  这一栏的 Launch Screen File 置空。第三步，点击菜单栏 Product，点击 Clean 即可。
+
+但这时候还没有完成，跑起应用时你会发现会有两条黑边在左右两侧，解决的方法就是在项目中添加一张启动图片，这样就可以去除应用的左右两条黑边了。
+
+## Crossfade
+
+添加动画可以让应用看起来更精致，但只需要简单的几行代码。
+
+```swift
+import QuartzCore
+
+let transition = CATransition()transition.type = kCATransitionFadetransition.duration = 1transition.timingFunction = CAMediaTimingFunction(name:view.layer.add(transition, forKey: nil)
+```
+
+
+
 
 
 
