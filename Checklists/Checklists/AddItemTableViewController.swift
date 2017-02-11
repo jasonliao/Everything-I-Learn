@@ -1,14 +1,14 @@
 //
-//  CheckListTableViewController.swift
+//  AddItemTableViewController.swift
 //  Checklists
 //
-//  Created by  jasonliao on 10/02/2017.
+//  Created by  jasonliao on 11/02/2017.
 //  Copyright © 2017  jasonliao. All rights reserved.
 //
 
 import UIKit
 
-class CheckListTableViewController: UITableViewController {
+class AddItemTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,10 +35,19 @@ class CheckListTableViewController: UITableViewController {
         return 1
     }
 
+    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+
+        // Configure the cell...
 
         return cell
+    }
+    */
+    
+    // MARK: Will select row
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
     }
 
     /*
@@ -85,5 +94,16 @@ class CheckListTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // MARK: Action
+    
+    @IBAction func done(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 
 }
