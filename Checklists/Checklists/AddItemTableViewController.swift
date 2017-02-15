@@ -8,21 +8,46 @@
 
 import UIKit
 
-class AddItemTableViewController: UITableViewController {
+protocol AddItemTableViewControllerDelegate: class {
+    func addItemTableViewControllerDidCancel(_ controller: AddItemTableViewController)
+    func addItemTableViewController(_ controller: AddItemTableViewController, didFinishAdding item: ChecklistItem)
+}
 
+class AddItemTableViewController: UITableViewController, UITextFieldDelegate {
+
+    @IBOutlet weak var addItemTextField: UITextField!
+    @IBOutlet weak var doneBarButton: UIBarButtonItem!
+    
+    weak var delegate: AddItemTableViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addItemTextField.becomeFirstResponder()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: UITextFieldDelegate
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let oldText = textField.text! as NSString
+        let newText = oldText.replacingCharacters(in: range, with: string) as NSString
+        
+        doneBarButton.isEnabled = newText.length > 0
+        return true
     }
 
     // MARK: - Table view data source
@@ -97,12 +122,13 @@ class AddItemTableViewController: UITableViewController {
     
     // MARK: Action
     
-    @IBAction func done(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+    @IBAction func done() {
+        let item = ChecklistItem(text: addItemTextField.text!, checked: false)
+        delegate?.addItemTableViewController(self, didFinishAdding: item)
     }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+        delegate?.addItemTableViewControllerDidCancel(self)
     }
     
 

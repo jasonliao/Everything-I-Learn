@@ -44,7 +44,7 @@
                     <navigationItem key="navigationItem" title="Checklists" id="rfv-z1-7DI">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Gld-rU-RAr">
                             <connections>
-                                <segue destination="gfk-p5-n15" kind="presentation" id="0t3-XF-RfL"/>
+                                <segue destination="gfk-p5-n15" kind="presentation" identifier="AddItem" id="0t3-XF-RfL"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -71,12 +71,16 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AKj-00-Caf">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add Item Here!" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AKj-00-Caf">
                                                     <rect key="frame" x="8" y="0.0" width="359" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                                    <connections>
+                                                        <action selector="done" destination="vPM-Jb-94N" eventType="editingDidEndOnExit" id="USK-Tg-EX4"/>
+                                                        <outlet property="delegate" destination="vPM-Jb-94N" id="rJi-BY-U6y"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -95,12 +99,16 @@
                                 <action selector="cancel:" destination="vPM-Jb-94N" id="7xE-bh-oxB"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="R27-Kx-a2L">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="done" id="R27-Kx-a2L">
                             <connections>
-                                <action selector="done:" destination="vPM-Jb-94N" id="996-9s-pN0"/>
+                                <action selector="done" destination="vPM-Jb-94N" id="xBk-Jh-hyu"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="addItemTextField" destination="AKj-00-Caf" id="LpB-zT-GLB"/>
+                        <outlet property="doneBarButton" destination="R27-Kx-a2L" id="JpR-36-8eP"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="npp-Qn-RbQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

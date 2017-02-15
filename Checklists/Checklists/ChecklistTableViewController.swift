@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChecklistTableViewController: UITableViewController {
+class ChecklistTableViewController: UITableViewController, AddItemTableViewControllerDelegate {
     
     var checklistItems = [ChecklistItem]()
     
@@ -94,16 +94,34 @@ class ChecklistTableViewController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "AddItem" {
+            let navigationController = segue.destination as! UINavigationController
+            let viewController = navigationController.topViewController as! AddItemTableViewController
+            
+            viewController.delegate = self
+        }
     }
-    */
+
     
+    // MARK: AddItemTableViewControllerDelegate
+    
+    func addItemTableViewController(_ controller: AddItemTableViewController, didFinishAdding item: ChecklistItem) {
+        let count = checklistItems.count
+        let indexPath = IndexPath(row: count, section: 0)
+        
+        checklistItems.append(item)
+        tableView.insertRows(at: [indexPath], with: .automatic)
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func addItemTableViewControllerDidCancel(_ controller: AddItemTableViewController) {
+        dismiss(animated: true, completion: nil)
+    }
     
     // MARK: Private function
     
