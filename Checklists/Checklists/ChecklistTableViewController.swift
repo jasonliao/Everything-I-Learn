@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChecklistTableViewController: UITableViewController, AddItemTableViewControllerDelegate {
+class ChecklistTableViewController: UITableViewController, ItemDetailTableViewControllerDelegate {
     
     var checklistItems = [ChecklistItem]()
     
@@ -98,18 +98,25 @@ class ChecklistTableViewController: UITableViewController, AddItemTableViewContr
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
         if segue.identifier == "AddItem" {
             let navigationController = segue.destination as! UINavigationController
-            let viewController = navigationController.topViewController as! AddItemTableViewController
-            
+            let viewController = navigationController.topViewController as! ItemDetailTableViewController
             viewController.delegate = self
+        } else if segue.identifier == "EditItem" {
+            let navigationController = segue.destination as! UINavigationController
+            let viewController = navigationController.topViewController as! ItemDetailTableViewController
+            viewController.delegate = self
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                viewController.editItem = checklistItems[indexPath.row]
+            }
         }
     }
 
     
-    // MARK: AddItemTableViewControllerDelegate
+    // MARK: ItemDetailTableViewControllerDelegate
     
-    func addItemTableViewController(_ controller: AddItemTableViewController, didFinishAdding item: ChecklistItem) {
+    func itemDetailTableViewController(_ controller: ItemDetailTableViewController, didFinishAdding item: ChecklistItem) {
         let count = checklistItems.count
         let indexPath = IndexPath(row: count, section: 0)
         
@@ -119,17 +126,30 @@ class ChecklistTableViewController: UITableViewController, AddItemTableViewContr
         dismiss(animated: true, completion: nil)
     }
     
-    func addItemTableViewControllerDidCancel(_ controller: AddItemTableViewController) {
+    func itemDetailTableViewController(_ controller: ItemDetailTableViewController, didFinishEditing item: ChecklistItem) {
+        
+        if let index = checklistItems.index(of: item) {
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) {
+                configureText(for: cell, with: item)
+            }
+        }
+    
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func itemDetailTableViewControllerDidCancel(_ controller: ItemDetailTableViewController) {
         dismiss(animated: true, completion: nil)
     }
     
     // MARK: Private function
     
     private func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
+        let label = cell.viewWithTag(1000) as! UILabel
         if item.checked {
-            cell.accessoryType = .checkmark
+            label.text = "√"
         } else {
-            cell.accessoryType = .none
+            label.text = ""
         }
     }
     
