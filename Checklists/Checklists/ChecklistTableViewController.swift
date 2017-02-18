@@ -59,6 +59,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+        saveChecklistItems()
     }
 
     
@@ -73,6 +74,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
         if editingStyle == .delete {
             checklistItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            saveChecklistItems()
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -124,6 +126,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
         tableView.insertRows(at: [indexPath], with: .automatic)
         
         dismiss(animated: true, completion: nil)
+        saveChecklistItems()
     }
     
     func itemDetailTableViewController(_ controller: ItemDetailTableViewController, didFinishEditing item: ChecklistItem) {
@@ -136,6 +139,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
         }
     
         dismiss(animated: true, completion: nil)
+        saveChecklistItems()
     }
     
     func itemDetailTableViewControllerDidCancel(_ controller: ItemDetailTableViewController) {
@@ -167,4 +171,24 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
         
         checklistItems += [checklistItem0, checklistItem1, checklistItem2, checklistItem3, checklistItem4]
     }
+    
+    
+    private func saveChecklistItems() {
+//        let data = NSMutableData()
+//        let archiver = NSKeyedArchiver(forWritingWith: data)
+//        archiver.encode(checklistItems, forKey: "checklistItems")
+//        archiver.finishEncoding()
+//        data.write(to: ChecklistItem.archiveURL, atomically: true)
+        
+        let isSaveSuccessful = NSKeyedArchiver.archiveRootObject(checklistItems, toFile: ChecklistItem.archiveURL.path)
+        
+        if isSaveSuccessful {
+            print("save successfull")
+        } else {
+            print("save failed")
+        }
+        
+        
+    }
+    
 }
