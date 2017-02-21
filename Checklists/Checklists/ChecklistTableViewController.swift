@@ -15,7 +15,8 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadSampleChecklistItem()
+        //loadSampleChecklistItem()
+        loadChecklistItems()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -174,21 +175,48 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
     
     
     private func saveChecklistItems() {
+        // method in checklist
 //        let data = NSMutableData()
 //        let archiver = NSKeyedArchiver(forWritingWith: data)
 //        archiver.encode(checklistItems, forKey: "checklistItems")
 //        archiver.finishEncoding()
 //        data.write(to: ChecklistItem.archiveURL, atomically: true)
         
+        // method in foodtracker
         let isSaveSuccessful = NSKeyedArchiver.archiveRootObject(checklistItems, toFile: ChecklistItem.archiveURL.path)
         
-        if isSaveSuccessful {
-            print("save successfull")
-        } else {
-            print("save failed")
+        if !isSaveSuccessful {
+            let alert = UIAlertController(title: "Sorry", message: "Save checklistItem failed", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(action)
+            present(alert, animated: true, completion: nil)
         }
         
+    }
+    
+    private func loadChecklistItems() {
+        // method in checklist
+//        if let data = try? Data(contentsOf: ChecklistItem.archiveURL) {
+//            let unarchver = NSKeyedUnarchiver(forReadingWith: data)
+//            checklistItems = unarchver.decodeObject(forKey: "checklistItems") as! [ChecklistItem]
+//            unarchver.finishDecoding()
+//        }
+        
+        // method in foodtracker
+        if let items = NSKeyedUnarchiver.unarchiveObject(withFile: ChecklistItem.archiveURL.path) as? [ChecklistItem] {
+            checklistItems = items
+        }
         
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }

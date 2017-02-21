@@ -9,8 +9,8 @@
 import Foundation
 
 class ChecklistItem: NSObject, NSCoding {
-    var text = ""
-    var checked = false
+    var text: String
+    var checked: Bool
     
     // MARK: Archiving Paths
     
@@ -32,7 +32,9 @@ class ChecklistItem: NSObject, NSCoding {
         aCoder.encode(checked, forKey: "checked")
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init()
+    required convenience init?(coder aDecoder: NSCoder) {
+        let text = aDecoder.decodeObject(forKey: "text") as! String
+        let checked = aDecoder.decodeBool(forKey: "checked")
+        self.init(text: text, checked: checked)
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C6EC38D1E5C5F17006CC269 /* AllListsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */; };
 		8C87E26C1E4DF3DC0046C9D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C87E26B1E4DF3DC0046C9D8 /* AppDelegate.swift */; };
 		8C87E2711E4DF3DC0046C9D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C87E26F1E4DF3DC0046C9D8 /* Main.storyboard */; };
 		8C87E2731E4DF3DC0046C9D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C87E2721E4DF3DC0046C9D8 /* Assets.xcassets */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllListsTableViewController.swift; sourceTree = "<group>"; };
 		8C87E2681E4DF3DC0046C9D8 /* Checklists.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Checklists.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C87E26B1E4DF3DC0046C9D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8C87E2701E4DF3DC0046C9D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 			children = (
 				8C87E26B1E4DF3DC0046C9D8 /* AppDelegate.swift */,
 				8C87E26F1E4DF3DC0046C9D8 /* Main.storyboard */,
+				8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */,
 				8C87E2721E4DF3DC0046C9D8 /* Assets.xcassets */,
 				8C87E2741E4DF3DC0046C9D8 /* LaunchScreen.storyboard */,
 				8C87E2771E4DF3DC0046C9D8 /* Info.plist */,
@@ -145,6 +148,7 @@
 				8C87E2821E4F0D830046C9D8 /* ItemDetailTableViewController.swift in Sources */,
 				8C87E26C1E4DF3DC0046C9D8 /* AppDelegate.swift in Sources */,
 				8C87E2801E4EE6720046C9D8 /* ChecklistItem.swift in Sources */,
+				8C6EC38D1E5C5F17006CC269 /* AllListsTableViewController.swift in Sources */,
 				8C87E27E1E4DF55D0046C9D8 /* ChecklistTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
