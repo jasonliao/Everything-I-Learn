@@ -20,6 +20,7 @@ class ChecklistItem: NSObject, NSCoding {
     init(text: String, checked: Bool) {
         self.text = text
         self.checked = checked
+        super.init()
     }
     
     func toggleChecked() {
