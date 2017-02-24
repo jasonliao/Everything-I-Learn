@@ -135,7 +135,7 @@ class ListDetailTableViewController: UITableViewController, UITextFieldDelegate 
             checklist.name = checklistTextField.text!
             delegate?.listDetailTableViewControllerDidFinishEditing(self, checklist: checklist)
         } else {
-            let checklist = Checklist(name: checklistTextField.text!)
+            let checklist = Checklist(name: checklistTextField.text!, items: [])
             delegate?.listDetailTableViewControllerDidFinishAdding(self, checklist: checklist)
         }
     }

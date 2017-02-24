@@ -12,11 +12,6 @@ class ChecklistItem: NSObject, NSCoding {
     var text: String
     var checked: Bool
     
-    // MARK: Archiving Paths
-    
-    static let documentDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let archiveURL = documentDirectory.appendingPathComponent("checklist.plist")
-    
     init(text: String, checked: Bool) {
         self.text = text
         self.checked = checked
@@ -38,4 +33,6 @@ class ChecklistItem: NSObject, NSCoding {
         let checked = aDecoder.decodeBool(forKey: "checked")
         self.init(text: text, checked: checked)
     }
+
+    
 }

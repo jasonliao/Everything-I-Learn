@@ -10,14 +10,11 @@ import UIKit
 
 class ChecklistTableViewController: UITableViewController, ItemDetailTableViewControllerDelegate {
     
-    var checklistItems = [ChecklistItem]()
     var checklist: Checklist!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // load checklistitem from file
-        loadChecklistItems()
         
         // change title
         title = checklist.name
@@ -35,12 +32,12 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return checklistItems.count
+        return checklist.items.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
-        let item = checklistItems[indexPath.row]
+        let item = checklist.items[indexPath.row]
         
         configureText(for: cell, with: item)
         configureCheckmark(for: cell, with: item)
@@ -52,13 +49,12 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
-            let item = checklistItems[indexPath.row]
+            let item = checklist.items[indexPath.row]
             item.toggleChecked()
             configureCheckmark(for: cell, with: item)
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
-        saveChecklistItems()
     }
 
     
@@ -71,9 +67,8 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            checklistItems.remove(at: indexPath.row)
+            checklist.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-            saveChecklistItems()
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -109,7 +104,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
             let viewController = navigationController.topViewController as! ItemDetailTableViewController
             viewController.delegate = self
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                viewController.editItem = checklistItems[indexPath.row]
+                viewController.editItem = checklist.items[indexPath.row]
             }
         }
     }
@@ -118,19 +113,18 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
     // MARK: ItemDetailTableViewControllerDelegate
     
     func itemDetailTableViewController(_ controller: ItemDetailTableViewController, didFinishAdding item: ChecklistItem) {
-        let count = checklistItems.count
+        let count = checklist.items.count
         let indexPath = IndexPath(row: count, section: 0)
         
-        checklistItems.append(item)
+        checklist.items.append(item)
         tableView.insertRows(at: [indexPath], with: .automatic)
         
         dismiss(animated: true, completion: nil)
-        saveChecklistItems()
     }
     
     func itemDetailTableViewController(_ controller: ItemDetailTableViewController, didFinishEditing item: ChecklistItem) {
         
-        if let index = checklistItems.index(of: item) {
+        if let index = checklist.items.index(of: item) {
             let indexPath = IndexPath(row: index, section: 0)
             if let cell = tableView.cellForRow(at: indexPath) {
                 configureText(for: cell, with: item)
@@ -138,7 +132,6 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
         }
     
         dismiss(animated: true, completion: nil)
-        saveChecklistItems()
     }
     
     func itemDetailTableViewControllerDidCancel(_ controller: ItemDetailTableViewController) {
@@ -160,50 +153,6 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
         let label = cell.viewWithTag(520) as! UILabel
         label.text = item.text
     }
-    
-    
-    private func saveChecklistItems() {
-        // method in checklist
-//        let data = NSMutableData()
-//        let archiver = NSKeyedArchiver(forWritingWith: data)
-//        archiver.encode(checklistItems, forKey: "checklistItems")
-//        archiver.finishEncoding()
-//        data.write(to: ChecklistItem.archiveURL, atomically: true)
-        
-        // method in foodtracker
-        let isSaveSuccessful = NSKeyedArchiver.archiveRootObject(checklistItems, toFile: ChecklistItem.archiveURL.path)
-        
-        if !isSaveSuccessful {
-            let alert = UIAlertController(title: "Sorry", message: "Save checklistItem failed", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(action)
-            present(alert, animated: true, completion: nil)
-        }
-        
-    }
-    
-    private func loadChecklistItems() {
-        // method in checklist
-//        if let data = try? Data(contentsOf: ChecklistItem.archiveURL) {
-//            let unarchver = NSKeyedUnarchiver(forReadingWith: data)
-//            checklistItems = unarchver.decodeObject(forKey: "checklistItems") as! [ChecklistItem]
-//            unarchver.finishDecoding()
-//        }
-        
-        // method in foodtracker
-        if let items = NSKeyedUnarchiver.unarchiveObject(withFile: ChecklistItem.archiveURL.path) as? [ChecklistItem] {
-            checklistItems = items
-        }
-        
-    }
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

@@ -7,19 +7,21 @@
 //
 
 import UIKit
+import os.log
 
 class AllListsTableViewController: UITableViewController, ListDetailTableViewControllerDelegate {
     
     var checklists = [Checklist]()
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        loadChecklists()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        print(Checklist.archiveURL.path)
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,7 +38,6 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return checklists.count
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = makeCell(for: tableView)
@@ -45,15 +46,12 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
         return cell
     }
     
-
-    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
 
-    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -90,6 +88,12 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
         return true
     }
     */
+    
+    // MARK: did select row
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "ShowChecklist", sender: checklists[indexPath.row])
+    }
+    
 
     // MARK: - Navigation
 
@@ -107,10 +111,6 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
         }
     }
     
-    // MARK: did select row
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ShowChecklist", sender: checklists[indexPath.row])
-    }
     
     // MARK: ListDetailTableViewControllerDelegate
     
@@ -150,16 +150,22 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     }
     
     
-    required init?(coder aDecoder: NSCoder) {
+    func saveChecklists() {
+        // save checklists
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(checklists, toFile: Checklist.archiveURL.path)
         
-        super.init(coder: aDecoder)
-        
-        let list0 = Checklist(name: "Birthdays")
-        let list1 = Checklist(name: "Groceries")
-        let list2 = Checklist(name: "Cool Apps")
-        let list3 = Checklist(name: "TODO")
-        
-        checklists += [list0, list1, list2, list3]
+        if isSuccessfulSave {
+            os_log("save successfully", log: OSLog.default, type: .default)
+        } else {
+            os_log("save failed", log: OSLog.default, type: .error)
+        }
     }
+    
+    private func loadChecklists() {
+        if let lists = NSKeyedUnarchiver.unarchiveObject(withFile: Checklist.archiveURL.path) as? [Checklist] {
+            checklists = lists
+        }
+    }
+    
 
 }
