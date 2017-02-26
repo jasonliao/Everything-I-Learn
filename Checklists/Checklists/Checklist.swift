@@ -12,12 +12,7 @@ class Checklist: NSObject, NSCoding {
     var name: String
     var items: [ChecklistItem]
     
-    // MARK: Archiving Paths
-    
-    static let documentDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let archiveURL = documentDirectory.appendingPathComponent("checklists.plist")
-    
-    init(name: String, items: [ChecklistItem]) {
+       init(name: String, items: [ChecklistItem]) {
         self.name = name
         self.items = items
         super.init()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C2A5E341E62835F00DFF7E3 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A5E331E62835F00DFF7E3 /* DataModel.swift */; };
 		8C6EC38D1E5C5F17006CC269 /* AllListsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */; };
 		8C6EC38F1E5D6E04006CC269 /* Checklist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC38E1E5D6E04006CC269 /* Checklist.swift */; };
 		8C6EC3911E5D81DF006CC269 /* ListDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC3901E5D81DF006CC269 /* ListDetailTableViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8C2A5E331E62835F00DFF7E3 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllListsTableViewController.swift; sourceTree = "<group>"; };
 		8C6EC38E1E5D6E04006CC269 /* Checklist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checklist.swift; sourceTree = "<group>"; };
 		8C6EC3901E5D81DF006CC269 /* ListDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				8C87E27D1E4DF55D0046C9D8 /* ChecklistTableViewController.swift */,
 				8C87E27F1E4EE6720046C9D8 /* ChecklistItem.swift */,
 				8C6EC38E1E5D6E04006CC269 /* Checklist.swift */,
+				8C2A5E331E62835F00DFF7E3 /* DataModel.swift */,
 				8C87E2811E4F0D830046C9D8 /* ItemDetailTableViewController.swift */,
 				8C6EC3901E5D81DF006CC269 /* ListDetailTableViewController.swift */,
 			);
@@ -152,6 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C87E2821E4F0D830046C9D8 /* ItemDetailTableViewController.swift in Sources */,
+				8C2A5E341E62835F00DFF7E3 /* DataModel.swift in Sources */,
 				8C87E26C1E4DF3DC0046C9D8 /* AppDelegate.swift in Sources */,
 				8C6EC38F1E5D6E04006CC269 /* Checklist.swift in Sources */,
 				8C87E2801E4EE6720046C9D8 /* ChecklistItem.swift in Sources */,
