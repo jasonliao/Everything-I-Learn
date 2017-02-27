@@ -19,11 +19,16 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.delegate = self
-        let index = UserDefaults.standard.integer(forKey: "checklistIndex")
-        if index != -1 {
+        let index = dataModel.indexOfSelectedChecklist
+        if index >= 0 && index < dataModel.checklists.count {
             let checklist = dataModel.checklists[index]
             performSegue(withIdentifier: "ShowChecklist", sender: checklist)
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,8 +48,20 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = makeCell(for: tableView)
-        cell.textLabel!.text = dataModel.checklists[indexPath.row].name
+        let checklist = dataModel.checklists[indexPath.row]
+        let count = checklist.countUncheckedItem()
+        
         cell.accessoryType = .detailDisclosureButton
+        cell.textLabel!.text = checklist.name
+        
+        if checklist.items.count == 0 {
+            cell.detailTextLabel!.text = "(No Items)"
+        } else if count == 0 {
+            cell.detailTextLabel!.text = "All Done!"
+        } else {
+            cell.detailTextLabel!.text = "\(count) Remaining"
+        }
+        
         return cell
     }
     
@@ -93,7 +110,7 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     
     // MARK: did select row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UserDefaults.standard.set(indexPath.row, forKey: "checklistIndex")
+        dataModel.indexOfSelectedChecklist = indexPath.row
         performSegue(withIdentifier: "ShowChecklist", sender: dataModel.checklists[indexPath.row])
     }
     
@@ -117,7 +134,7 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     // MARK: UINavigationDelegate
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if viewController == self {
-            UserDefaults.standard.set(-1, forKey: "checklistIndex")
+            dataModel.indexOfSelectedChecklist = -1
         }
     }
     
@@ -155,7 +172,7 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) {
             return cell
         } else {
-            return UITableViewCell(style: .default, reuseIdentifier: cellIdentifier)
+            return UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
         }
     }
     

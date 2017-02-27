@@ -16,9 +16,18 @@ class DataModel {
     static let archiveURL = documentDirectory.appendingPathComponent("checklists.plist")
 
     var checklists = [Checklist]()
+    var indexOfSelectedChecklist: Int {
+        set {
+            UserDefaults.standard.set(newValue, forKey: "checklistIndex")
+        }
+        get {
+            return UserDefaults.standard.integer(forKey: "checklistIndex")
+        }
+    }
     
     init() {
         loadChecklists()
+        registerDefaults()
     }
     
     func saveChecklists() {
@@ -35,6 +44,11 @@ class DataModel {
         if let lists = NSKeyedUnarchiver.unarchiveObject(withFile: DataModel.archiveURL.path) as? [Checklist] {
             checklists = lists
         }
+    }
+    
+    func registerDefaults() {
+        let dictionary: [String: Any] = ["checklistIndex": -1]
+        UserDefaults.standard.register(defaults: dictionary)
     }
 
 }
