@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8C2A5E341E62835F00DFF7E3 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A5E331E62835F00DFF7E3 /* DataModel.swift */; };
+		8C2A5E361E67F60F00DFF7E3 /* IconPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A5E351E67F60F00DFF7E3 /* IconPickerTableViewController.swift */; };
 		8C6EC38D1E5C5F17006CC269 /* AllListsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */; };
 		8C6EC38F1E5D6E04006CC269 /* Checklist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC38E1E5D6E04006CC269 /* Checklist.swift */; };
 		8C6EC3911E5D81DF006CC269 /* ListDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC3901E5D81DF006CC269 /* ListDetailTableViewController.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		8C2A5E331E62835F00DFF7E3 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		8C2A5E351E67F60F00DFF7E3 /* IconPickerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconPickerTableViewController.swift; sourceTree = "<group>"; };
 		8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllListsTableViewController.swift; sourceTree = "<group>"; };
 		8C6EC38E1E5D6E04006CC269 /* Checklist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checklist.swift; sourceTree = "<group>"; };
 		8C6EC3901E5D81DF006CC269 /* ListDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 				8C87E27F1E4EE6720046C9D8 /* ChecklistItem.swift */,
 				8C6EC38E1E5D6E04006CC269 /* Checklist.swift */,
 				8C2A5E331E62835F00DFF7E3 /* DataModel.swift */,
+				8C2A5E351E67F60F00DFF7E3 /* IconPickerTableViewController.swift */,
 				8C87E2811E4F0D830046C9D8 /* ItemDetailTableViewController.swift */,
 				8C6EC3901E5D81DF006CC269 /* ListDetailTableViewController.swift */,
 			);
@@ -162,6 +165,7 @@
 				8C6EC38D1E5C5F17006CC269 /* AllListsTableViewController.swift in Sources */,
 				8C87E27E1E4DF55D0046C9D8 /* ChecklistTableViewController.swift in Sources */,
 				8C6EC3911E5D81DF006CC269 /* ListDetailTableViewController.swift in Sources */,
+				8C2A5E361E67F60F00DFF7E3 /* IconPickerTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

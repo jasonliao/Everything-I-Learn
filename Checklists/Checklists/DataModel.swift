@@ -26,6 +26,7 @@ class DataModel {
     }
     
     init() {
+        print(DataModel.archiveURL.path)
         loadChecklists()
         registerDefaults()
     }
@@ -43,12 +44,19 @@ class DataModel {
     func loadChecklists() {
         if let lists = NSKeyedUnarchiver.unarchiveObject(withFile: DataModel.archiveURL.path) as? [Checklist] {
             checklists = lists
+            sortChecklists()
         }
     }
     
     func registerDefaults() {
         let dictionary: [String: Any] = ["checklistIndex": -1]
         UserDefaults.standard.register(defaults: dictionary)
+    }
+    
+    func sortChecklists() {
+        checklists.sort(by: { checklist1, checklist2 in
+            return checklist1.name.localizedCompare(checklist2.name) == .orderedAscending
+        })
     }
 
 }

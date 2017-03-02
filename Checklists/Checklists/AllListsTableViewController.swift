@@ -14,6 +14,7 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -53,6 +54,7 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
         
         cell.accessoryType = .detailDisclosureButton
         cell.textLabel!.text = checklist.name
+        cell.imageView!.image = UIImage(named: checklist.iconName)
         
         if checklist.items.count == 0 {
             cell.detailTextLabel!.text = "(No Items)"
@@ -146,23 +148,16 @@ class AllListsTableViewController: UITableViewController, ListDetailTableViewCon
     }
     
     func listDetailTableViewControllerDidFinishAdding(_ controller: UITableViewController, checklist: Checklist) {
-        let newRowIndex = dataModel.checklists.count
-        let indexPath = IndexPath(row: newRowIndex, section: 0)
-        
         dataModel.checklists.append(checklist)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-        
+        dataModel.sortChecklists()
+        tableView.reloadData()
         dismiss(animated: true, completion: nil)
         
     }
     
     func listDetailTableViewControllerDidFinishEditing(_ controller: UITableViewController, checklist: Checklist) {
-        if let index = dataModel.checklists.index(of: checklist) {
-            let indexPath = IndexPath(row: index, section: 0)
-            if let cell = tableView.cellForRow(at: indexPath) {
-                cell.textLabel!.text = checklist.name
-            }
-        }
+        dataModel.sortChecklists()
+        tableView.reloadData()
         dismiss(animated: true, completion: nil)
     }
     

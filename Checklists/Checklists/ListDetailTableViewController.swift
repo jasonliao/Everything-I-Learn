@@ -14,12 +14,14 @@ protocol ListDetailTableViewControllerDelegate: class {
     func listDetailTableViewControllerDidFinishEditing(_ controller: UITableViewController, checklist: Checklist)
 }
 
-class ListDetailTableViewController: UITableViewController, UITextFieldDelegate {
+class ListDetailTableViewController: UITableViewController, UITextFieldDelegate, IconPickerTableViewControllerDelegate {
     
     @IBOutlet weak var checklistTextField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
+    @IBOutlet weak var iconImageView: UIImageView!
     
     var editChecklist: Checklist?
+    var iconName = "No Icon"
     
     weak var delegate: ListDetailTableViewControllerDelegate?
 
@@ -30,6 +32,8 @@ class ListDetailTableViewController: UITableViewController, UITextFieldDelegate 
             title = "Edit Checklist"
             checklistTextField.text = checklist.name
             doneBarButton.isEnabled = true
+            iconName = checklist.iconName
+            iconImageView.image = UIImage(named: iconName)
         }
     }
     
@@ -46,7 +50,7 @@ class ListDetailTableViewController: UITableViewController, UITextFieldDelegate 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,7 +60,12 @@ class ListDetailTableViewController: UITableViewController, UITextFieldDelegate 
     // MARK: willl select
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
+        if indexPath.section == 1 {
+            return indexPath
+            
+        } else {
+            return nil
+        }
     }
     
 
@@ -68,6 +77,13 @@ class ListDetailTableViewController: UITableViewController, UITextFieldDelegate 
         
         doneBarButton.isEnabled = newText.length > 0
         return true
+    }
+    
+    // MARK: IconPickerTableViewControllerDelegate
+    func iconPicker(_ picker: IconPickerTableViewController, didPick iconName: String) {
+        self.iconName = iconName
+        iconImageView.image = UIImage(named: iconName)
+        let _ = navigationController?.popViewController(animated: true)
     }
     
     /*
@@ -115,15 +131,19 @@ class ListDetailTableViewController: UITableViewController, UITextFieldDelegate 
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "PickIcon" {
+            let viewController = segue.destination as! IconPickerTableViewController
+            viewController.delegate = self
+        }
     }
-    */
+    
     
     // MARK: IB action
     @IBAction func cancel() {
@@ -133,9 +153,10 @@ class ListDetailTableViewController: UITableViewController, UITextFieldDelegate 
     @IBAction func done() {
         if let checklist = editChecklist {
             checklist.name = checklistTextField.text!
+            checklist.iconName = iconName
             delegate?.listDetailTableViewControllerDidFinishEditing(self, checklist: checklist)
         } else {
-            let checklist = Checklist(name: checklistTextField.text!, items: [])
+            let checklist = Checklist(name: checklistTextField.text!, items: [], iconName: iconName)
             delegate?.listDetailTableViewControllerDidFinishAdding(self, checklist: checklist)
         }
     }
