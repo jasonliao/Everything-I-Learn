@@ -142,6 +142,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailTableViewCo
     
     private func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
         let label = cell.viewWithTag(1000) as! UILabel
+        label.textColor = view.tintColor
         if item.checked {
             label.text = "√"
         } else {
