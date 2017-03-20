@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 protocol ItemDetailTableViewControllerDelegate: class {
     func itemDetailTableViewControllerDidCancel(_ controller: ItemDetailTableViewController)
@@ -211,20 +212,21 @@ class ItemDetailTableViewController: UITableViewController, UITextFieldDelegate 
     }
     
     func hideDatePicker() {
-        
-        datePickerVisible = false
+        if datePickerVisible {
+            datePickerVisible = false
             
-        let indexPathDateRow = IndexPath(row: 1, section: 1)
-        let indexPathDatePicker = IndexPath(row: 2, section: 1)
-
-        if let cell = tableView.cellForRow(at: indexPathDateRow) {
-            cell.detailTextLabel!.textColor = UIColor(white: 0, alpha: 0.5)
+            let indexPathDateRow = IndexPath(row: 1, section: 1)
+            let indexPathDatePicker = IndexPath(row: 2, section: 1)
+            
+            if let cell = tableView.cellForRow(at: indexPathDateRow) {
+                cell.detailTextLabel!.textColor = UIColor(white: 0, alpha: 0.5)
+            }
+            
+            tableView.beginUpdates()
+            tableView.reloadRows(at: [indexPathDateRow], with: .none)
+            tableView.deleteRows(at: [indexPathDatePicker], with: .fade)
+            tableView.endUpdates()
         }
-            
-        tableView.beginUpdates()
-        tableView.reloadRows(at: [indexPathDateRow], with: .none)
-        tableView.deleteRows(at: [indexPathDatePicker], with: .fade)
-        tableView.endUpdates()
         
     }
     
@@ -235,11 +237,13 @@ class ItemDetailTableViewController: UITableViewController, UITextFieldDelegate 
             item.text = addItemTextField.text!
             item.shouldRemind = shouldRemindSwitch.isOn
             item.dueDate = dueDate
+            item.scheduleNotification()
             delegate?.itemDetailTableViewController(self, didFinishEditing: item)
         } else {
             let item = ChecklistItem(text: addItemTextField.text!, checked: false)
             item.shouldRemind = shouldRemindSwitch.isOn
             item.dueDate = dueDate
+            item.scheduleNotification()
             delegate?.itemDetailTableViewController(self, didFinishAdding: item)
 
         }
@@ -254,5 +258,15 @@ class ItemDetailTableViewController: UITableViewController, UITextFieldDelegate 
         updateDueDateLabel()
     }
     
+    @IBAction func shouldRemindToggled(_ switchControl: UISwitch) {
+        addItemTextField.resignFirstResponder()
+        
+        if switchControl.isOn {
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert, .sound], completionHandler: {
+                granted, error in
+            })
+        }
+    }
 
 }
