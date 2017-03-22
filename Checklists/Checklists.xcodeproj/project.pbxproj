@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C15640A1E803424004A1D48 /* lalalaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1564091E803424004A1D48 /* lalalaTableViewController.swift */; };
 		8C2A5E341E62835F00DFF7E3 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A5E331E62835F00DFF7E3 /* DataModel.swift */; };
 		8C2A5E361E67F60F00DFF7E3 /* IconPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A5E351E67F60F00DFF7E3 /* IconPickerTableViewController.swift */; };
 		8C6EC38D1E5C5F17006CC269 /* AllListsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8C1564091E803424004A1D48 /* lalalaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = lalalaTableViewController.swift; sourceTree = "<group>"; };
 		8C2A5E331E62835F00DFF7E3 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		8C2A5E351E67F60F00DFF7E3 /* IconPickerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconPickerTableViewController.swift; sourceTree = "<group>"; };
 		8C6EC38C1E5C5F17006CC269 /* AllListsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllListsTableViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				8C2A5E351E67F60F00DFF7E3 /* IconPickerTableViewController.swift */,
 				8C87E2811E4F0D830046C9D8 /* ItemDetailTableViewController.swift */,
 				8C6EC3901E5D81DF006CC269 /* ListDetailTableViewController.swift */,
+				8C1564091E803424004A1D48 /* lalalaTableViewController.swift */,
 			);
 			path = Checklists;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 			files = (
 				8C87E2821E4F0D830046C9D8 /* ItemDetailTableViewController.swift in Sources */,
 				8C2A5E341E62835F00DFF7E3 /* DataModel.swift in Sources */,
+				8C15640A1E803424004A1D48 /* lalalaTableViewController.swift in Sources */,
 				8C87E26C1E4DF3DC0046C9D8 /* AppDelegate.swift in Sources */,
 				8C6EC38F1E5D6E04006CC269 /* Checklist.swift in Sources */,
 				8C87E2801E4EE6720046C9D8 /* ChecklistItem.swift in Sources */,
